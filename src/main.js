@@ -17,15 +17,6 @@ const createUserRankTemplate = () => (
   </section>`
 );
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-const site = document.querySelector(`body`);
-const siteHeader = site.querySelector(`.header`);
-
-render(siteHeader, createUserRankTemplate(), INSERT_PLACE.BFE);
-
 const createFilterTemplate = () => (
   `<nav class="main-navigation">
     <div class="main-navigation__items">
@@ -38,10 +29,6 @@ const createFilterTemplate = () => (
   </nav>`
 );
 
-const siteMainField = site.querySelector(`main`);
-
-render(siteMainField, createFilterTemplate(), INSERT_PLACE.BFE);
-
 const createSortTemplate = () => (
   `<ul class="sort">
     <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
@@ -49,8 +36,6 @@ const createSortTemplate = () => (
     <li><a href="#" class="sort__button">Sort by rating</a></li>
   </ul>`
 );
-
-render(siteMainField, createSortTemplate(), INSERT_PLACE.BFE);
 
 const createContentFieldTemplate = () => (
   `<section class="films">
@@ -60,8 +45,6 @@ const createContentFieldTemplate = () => (
     </section>
   </section>`
 );
-
-render(siteMainField, createContentFieldTemplate(), INSERT_PLACE.BFE);
 
 const createFilmCardTemplate = () => (
   `<article class="film-card">
@@ -83,18 +66,9 @@ const createFilmCardTemplate = () => (
   </article>`
 );
 
-const filmsBoard = siteMainField.querySelector(`.films`);
-const mainFilms = filmsBoard.querySelector(`.films-list__container`);
-
-for (let i = 0; i < CARD_COUNT; i++) {
-  render(mainFilms, createFilmCardTemplate(), INSERT_PLACE.BFE);
-}
-
 const createLoadButtonTemplate = () => (
   `<button class="films-list__show-more">Show more</button>`
 );
-
-render(mainFilms, createLoadButtonTemplate(), INSERT_PLACE.AFE);
 
 const createExtraBlockTemplate = () => (
   `<section class="films-list--extra">
@@ -103,29 +77,11 @@ const createExtraBlockTemplate = () => (
   </section>`
 );
 
-for (let i = 0; i < EXTRA_COUNT; i++) {
-  render(filmsBoard, createExtraBlockTemplate(), INSERT_PLACE.BFE);
-}
-
-const extraBlocks = filmsBoard.querySelectorAll(`.films-list--extra`);
-
-extraBlocks.forEach((item) => {
-  let filmsList = item.querySelector(`.films-list__container`);
-
-  for (let i = 0; i < EXTRA_COUNT; i++) {
-    render(filmsList, createFilmCardTemplate(), INSERT_PLACE.BFE);
-  }
-});
-
 const createFooterStatsTemplate = () => (
   `<section class="footer__statistics">
     <p>130 291 movies inside</p>
   </section>`
 );
-
-const siteFooter = site.querySelector(`.footer`);
-
-render(siteFooter, createFooterStatsTemplate(), INSERT_PLACE.BFE);
 
 const createDetailsPopupTemplate = () => {
   site.classList.add(`hide-overflow`);
@@ -179,8 +135,6 @@ const createDetailsPopupTemplate = () => {
   </section>`
   );
 };
-
-render(siteFooter, createDetailsPopupTemplate(), INSERT_PLACE.AFE);
 
 const createFilmInfoTemplate = () => (
   `<div class="film-details__info-wrap">
@@ -243,11 +197,6 @@ const createFilmInfoTemplate = () => (
   </div>`
 );
 
-const popup = site.querySelector(`.film-details`);
-const filmInfoBlock = popup.querySelector(`.form-details__top-container`);
-
-render(filmInfoBlock, createFilmInfoTemplate(), INSERT_PLACE.BFE);
-
 const createPopupControlTemplate = () => (
   `<section class="film-details__controls">
     <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
@@ -260,8 +209,6 @@ const createPopupControlTemplate = () => (
     <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
   </section>`
 );
-
-render(filmInfoBlock, createPopupControlTemplate(), INSERT_PLACE.BFE);
 
 const createCommentTemplate = () => (
   `<li class="film-details__comment">
@@ -278,6 +225,57 @@ const createCommentTemplate = () => (
     </div>
   </li>`
 );
+
+const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+const site = document.querySelector(`body`);
+const siteHeader = site.querySelector(`.header`);
+
+render(siteHeader, createUserRankTemplate(), INSERT_PLACE.BFE);
+
+const siteMainField = site.querySelector(`main`);
+
+render(siteMainField, createFilterTemplate(), INSERT_PLACE.BFE);
+render(siteMainField, createSortTemplate(), INSERT_PLACE.BFE);
+render(siteMainField, createContentFieldTemplate(), INSERT_PLACE.BFE);
+
+const filmsBoard = siteMainField.querySelector(`.films`);
+const mainFilms = filmsBoard.querySelector(`.films-list__container`);
+
+for (let i = 0; i < CARD_COUNT; i++) {
+  render(mainFilms, createFilmCardTemplate(), INSERT_PLACE.BFE);
+}
+
+render(mainFilms, createLoadButtonTemplate(), INSERT_PLACE.AFE);
+
+for (let i = 0; i < EXTRA_COUNT; i++) {
+  render(filmsBoard, createExtraBlockTemplate(), INSERT_PLACE.BFE);
+}
+
+const extraBlocks = filmsBoard.querySelectorAll(`.films-list--extra`);
+
+extraBlocks.forEach((item) => {
+  let filmsList = item.querySelector(`.films-list__container`);
+
+  for (let i = 0; i < EXTRA_COUNT; i++) {
+    render(filmsList, createFilmCardTemplate(), INSERT_PLACE.BFE);
+  }
+});
+
+const siteFooter = site.querySelector(`.footer`);
+
+render(siteFooter, createFooterStatsTemplate(), INSERT_PLACE.BFE);
+
+render(siteFooter, createDetailsPopupTemplate(), INSERT_PLACE.AFE);
+
+const popup = site.querySelector(`.film-details`);
+const filmInfoBlock = popup.querySelector(`.form-details__top-container`);
+
+render(filmInfoBlock, createFilmInfoTemplate(), INSERT_PLACE.BFE);
+
+render(filmInfoBlock, createPopupControlTemplate(), INSERT_PLACE.BFE);
 
 const commentsList = popup.querySelector(`.film-details__comments-list`);
 
