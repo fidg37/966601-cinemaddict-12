@@ -1,6 +1,7 @@
 "use strict";
 
 const CARD_COUNT = 5;
+const EXTRA_COUNT = 2;
 
 const INSERT_PLACE = {
   BFE: `beforeend`,
@@ -81,14 +82,36 @@ const createFilmCardTemplate = () => (
   </article>`
 );
 
-const filmList = siteMainField.querySelector(`.films-list__container`);
+const filmsBoard = siteMainField.querySelector(`.films`);
+const mainFilms = filmsBoard.querySelector(`.films-list__container`);
 
 for (let i = 0; i < CARD_COUNT; i++) {
-  render(filmList, createFilmCardTemplate(), INSERT_PLACE.BFE);
+  render(mainFilms, createFilmCardTemplate(), INSERT_PLACE.BFE);
 }
 
 const createLoadButtonTemplate = () => (
   `<button class="films-list__show-more">Show more</button>`
 );
 
-render(filmList, createLoadButtonTemplate(), INSERT_PLACE.AFE);
+render(mainFilms, createLoadButtonTemplate(), INSERT_PLACE.AFE);
+
+const createExtraBlockTemplate = () => (
+  `<section class="films-list--extra">
+    <h2 class="films-list__title">Top rated</h2>
+    <div class="films-list__container"></div>
+  </section>`
+);
+
+for (let i = 0; i < EXTRA_COUNT; i++) {
+  render(filmsBoard, createExtraBlockTemplate(), INSERT_PLACE.BFE);
+}
+
+const extraBlocks = filmsBoard.querySelectorAll(`.films-list--extra`);
+
+extraBlocks.forEach((item) => {
+  let filmsList = item.querySelector(`.films-list__container`);
+
+  for (let i = 0; i < EXTRA_COUNT; i++) {
+    render(filmsList, createFilmCardTemplate(), INSERT_PLACE.BFE);
+  }
+});
