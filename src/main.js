@@ -13,8 +13,8 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const siteWorkField = document.querySelector(`body`);
-const siteHeader = siteWorkField.querySelector(`.header`);
+const site = document.querySelector(`body`);
+const siteHeader = site.querySelector(`.header`);
 
 render(siteHeader, createUserRankTemplate(), `beforeend`);
 
@@ -32,9 +32,9 @@ const createFilterTemplate = () => {
   );
 };
 
-const siteContent = siteWorkField.querySelector(`main`);
+const siteMainField = site.querySelector(`main`);
 
-render(siteContent, createFilterTemplate(), `beforeend`);
+render(siteMainField, createFilterTemplate(), `beforeend`);
 
 const createSortTemplate = () => {
   return (
@@ -46,4 +46,17 @@ const createSortTemplate = () => {
   );
 };
 
-render(siteContent, createSortTemplate(), `beforeend`);
+render(siteMainField, createSortTemplate(), `beforeend`);
+
+const createContentFieldTemplate = () => {
+  return (
+    `<section class="films">
+      <section class="films-list">
+        <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+        <div class="films-list__container"></div>
+      </section>
+    </section>`
+  );
+};
+
+render (siteMainField, createContentFieldTemplate(), `beforeend`);
