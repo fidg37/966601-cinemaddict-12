@@ -126,8 +126,10 @@ const siteFooter = site.querySelector(`.footer`);
 
 render(siteFooter, createFooterStatsTemplate(), INSERT_PLACE.BFE);
 
-const createDetailsPopupTemplate = () => (
-  `<section class="film-details">
+const createDetailsPopupTemplate = () => {
+  site.classList.add(`hide-overflow`);
+  return (
+    `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
@@ -174,7 +176,8 @@ const createDetailsPopupTemplate = () => (
       </div>
     </form>
   </section>`
-);
+  );
+};
 
 render(siteFooter, createDetailsPopupTemplate(), INSERT_PLACE.AFE);
 
@@ -243,3 +246,18 @@ const popup = site.querySelector(`.film-details`);
 const filmInfoBlock = popup.querySelector(`.form-details__top-container`);
 
 render(filmInfoBlock, createFilmInfoTemplate(), INSERT_PLACE.BFE);
+
+const createPopupControlTemplate = () => (
+  `<section class="film-details__controls">
+    <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+    <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+
+    <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+    <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+
+    <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+    <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+  </section>`
+);
+
+render(filmInfoBlock, createPopupControlTemplate(), INSERT_PLACE.BFE);
