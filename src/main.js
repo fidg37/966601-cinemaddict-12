@@ -115,3 +115,13 @@ extraBlocks.forEach((item) => {
     render(filmsList, createFilmCardTemplate(), INSERT_PLACE.BFE);
   }
 });
+
+const createFooterStatsTemplate = () => (
+  `<section class="footer__statistics">
+    <p>130 291 movies inside</p>
+  </section>`
+);
+
+const siteFooter = site.querySelector(`.footer`);
+
+render(siteFooter, createFooterStatsTemplate(), INSERT_PLACE.BFE);
