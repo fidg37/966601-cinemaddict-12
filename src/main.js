@@ -4,7 +4,8 @@ const CARD_COUNT = 5;
 
 const INSERT_PLACE = {
   BFE: `beforeend`,
-  AFB: `afterbegin`
+  AFB: `afterbegin`,
+  AFE: `afterend`
 };
 
 const createUserRankTemplate = () => (
@@ -85,3 +86,9 @@ const filmList = siteMainField.querySelector(`.films-list__container`);
 for (let i = 0; i < CARD_COUNT; i++) {
   render(filmList, createFilmCardTemplate(), INSERT_PLACE.BFE);
 }
+
+const createLoadButtonTemplate = () => (
+  `<button class="films-list__show-more">Show more</button>`
+);
+
+render(filmList, createLoadButtonTemplate(), INSERT_PLACE.AFE);
