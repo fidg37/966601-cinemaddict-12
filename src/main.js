@@ -10,5 +10,10 @@ const createUserRankTemplate = () => {
 };
 
 const render = (container, template, place) => {
-  container.insertAjacentHTML(place, template);
+  container.insertAdjacentHTML(place, template);
 };
+
+const siteWorkField = document.querySelector(`body`);
+const siteHeader = siteWorkField.querySelector(`.header`);
+
+render(siteHeader, createUserRankTemplate(), `beforeend`);
