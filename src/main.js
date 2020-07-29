@@ -12,6 +12,11 @@ const InsertPlace = {
   AFTEREND: `afterend`
 };
 
+const site = document.querySelector(`body`);
+const siteHeader = site.querySelector(`.header`);
+const siteMainField = site.querySelector(`main`);
+const siteFooter = site.querySelector(`.footer`);
+
 const render = (container, template, place = InsertPlace.BEFOREEND) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -232,13 +237,7 @@ const createCommentTemplate = () => (
   </li>`
 );
 
-const site = document.querySelector(`body`);
-const siteHeader = site.querySelector(`.header`);
-
 render(siteHeader, createUserRankTemplate());
-
-const siteMainField = site.querySelector(`main`);
-
 render(siteMainField, createFilterTemplate());
 render(siteMainField, createSortTemplate());
 render(siteMainField, createContentFieldTemplate());
@@ -265,8 +264,6 @@ extraBlocks.forEach((item) => {
     render(filmsList, createFilmCardTemplate());
   }
 });
-
-const siteFooter = site.querySelector(`.footer`);
 
 render(siteFooter, createFooterStatsTemplate());
 
