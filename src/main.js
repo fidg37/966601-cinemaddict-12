@@ -1,6 +1,7 @@
 "use strict";
 
 const IterationCount = {
+  DEFAULT: 1,
   CARD: 5,
   EXTRA: 2,
   COMMENT: 4
@@ -17,12 +18,13 @@ const siteHeader = site.querySelector(`.header`);
 const siteMainField = site.querySelector(`main`);
 const siteFooter = site.querySelector(`.footer`);
 
-const render = (container, template, place = InsertPlace.BEFOREEND, iteration) => {
-  if (iteration) {
-    for (let i = 0; i < iteration; i++) {
-      container.insertAdjacentHTML(place, template);
-    }
-  } else {
+const render = ({
+  container,
+  template,
+  place = InsertPlace.BEFOREEND,
+  iteration = IterationCount.DEFAULT
+}) => {
+  for (let i = 0; i < iteration; i++) {
     container.insertAdjacentHTML(place, template);
   }
 };
@@ -243,35 +245,33 @@ const createCommentTemplate = () => (
   </li>`
 );
 
-render(siteHeader, createUserRankTemplate());
-render(siteMainField, createFilterTemplate());
-render(siteMainField, createSortTemplate());
-render(siteMainField, createContentFieldTemplate());
+render({container: siteHeader, template: createUserRankTemplate()});
+render({container: siteMainField, template: createFilterTemplate()});
+render({container: siteMainField, template: createSortTemplate()});
+render({container: siteMainField, template: createContentFieldTemplate()});
 
 const filmsBoard = siteMainField.querySelector(`.films`);
 const mainFilms = filmsBoard.querySelector(`.films-list__container`);
 
-render(mainFilms, createFilmCardTemplate(), InsertPlace.BEFOREEND, IterationCount.CARD);
-render(mainFilms, createLoadButtonTemplate(), InsertPlace.AFTEREND);
-render(filmsBoard, createExtraBlockTemplate(), InsertPlace.BEFOREEND, IterationCount.EXTRA);
+render({container: mainFilms, template: createFilmCardTemplate(), iteration: IterationCount.CARD});
+render({container: mainFilms, template: createLoadButtonTemplate(), place: InsertPlace.AFTEREND});
+render({container: filmsBoard, template: createExtraBlockTemplate(), iteration: IterationCount.EXTRA});
 
 filmsBoard.querySelectorAll(`.films-list--extra`).forEach((item) => {
   let filmsList = item.querySelector(`.films-list__container`);
 
-  render(filmsList, createFilmCardTemplate(), InsertPlace.BEFOREEND, IterationCount.EXTRA);
+  render({container: filmsList, template: createFilmCardTemplate(), iteration: IterationCount.EXTRA});
 });
 
-render(siteFooter, createFooterStatsTemplate());
-
-render(siteFooter, createDetailsPopupTemplate(), InsertPlace.AFTEREND);
+render({container: siteFooter, template: createFooterStatsTemplate()});
+render({container: siteFooter, template: createDetailsPopupTemplate(), place: InsertPlace.AFTEREND});
 
 const popup = site.querySelector(`.film-details`);
 const filmInfoBlock = popup.querySelector(`.form-details__top-container`);
 
-render(filmInfoBlock, createFilmInfoTemplate());
-
-render(filmInfoBlock, createPopupControlTemplate());
+render({container: filmInfoBlock, template: createFilmInfoTemplate()});
+render({container: filmInfoBlock, template: createPopupControlTemplate()});
 
 const commentsList = popup.querySelector(`.film-details__comments-list`);
 
-render(commentsList, createCommentTemplate(), InsertPlace.BEFOREEND, IterationCount.COMMENT);
+render({container: commentsList, template: createCommentTemplate(), iteration: IterationCount.COMMENT});
