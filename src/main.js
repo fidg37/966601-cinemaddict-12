@@ -255,9 +255,7 @@ render(mainFilms, createFilmCardTemplate(), InsertPlace.BEFOREEND, IterationCoun
 render(mainFilms, createLoadButtonTemplate(), InsertPlace.AFTEREND);
 render(filmsBoard, createExtraBlockTemplate(), InsertPlace.BEFOREEND, IterationCount.EXTRA);
 
-const extraBlocks = filmsBoard.querySelectorAll(`.films-list--extra`);
-
-extraBlocks.forEach((item) => {
+filmsBoard.querySelectorAll(`.films-list--extra`).forEach((item) => {
   let filmsList = item.querySelector(`.films-list__container`);
 
   render(filmsList, createFilmCardTemplate(), InsertPlace.BEFOREEND, IterationCount.EXTRA);
@@ -275,6 +273,5 @@ render(filmInfoBlock, createFilmInfoTemplate());
 render(filmInfoBlock, createPopupControlTemplate());
 
 const commentsList = popup.querySelector(`.film-details__comments-list`);
-
 
 render(commentsList, createCommentTemplate(), InsertPlace.BEFOREEND, IterationCount.COMMENT);
