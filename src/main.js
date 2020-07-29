@@ -1,8 +1,10 @@
 "use strict";
 
-const CARD_COUNT = 5;
-const EXTRA_COUNT = 2;
-const COMMENTS_COUNT = 4;
+const IterationCount = {
+  CARD: 5,
+  EXTRA: 2,
+  COMMENT: 4
+};
 
 const InsertPlace = {
   BEFOREEND: `beforeend`,
@@ -244,13 +246,13 @@ render(siteMainField, createContentFieldTemplate());
 const filmsBoard = siteMainField.querySelector(`.films`);
 const mainFilms = filmsBoard.querySelector(`.films-list__container`);
 
-for (let i = 0; i < CARD_COUNT; i++) {
+for (let i = 0; i < IterationCount.CARD; i++) {
   render(mainFilms, createFilmCardTemplate());
 }
 
 render(mainFilms, createLoadButtonTemplate(), InsertPlace.AFTEREND);
 
-for (let i = 0; i < EXTRA_COUNT; i++) {
+for (let i = 0; i < IterationCount.EXTRA; i++) {
   render(filmsBoard, createExtraBlockTemplate());
 }
 
@@ -259,7 +261,7 @@ const extraBlocks = filmsBoard.querySelectorAll(`.films-list--extra`);
 extraBlocks.forEach((item) => {
   let filmsList = item.querySelector(`.films-list__container`);
 
-  for (let i = 0; i < EXTRA_COUNT; i++) {
+  for (let i = 0; i < IterationCount.EXTRA; i++) {
     render(filmsList, createFilmCardTemplate());
   }
 });
@@ -279,6 +281,6 @@ render(filmInfoBlock, createPopupControlTemplate());
 
 const commentsList = popup.querySelector(`.film-details__comments-list`);
 
-for (let i = 0; i < COMMENTS_COUNT; i++) {
+for (let i = 0; i < IterationCount.COMMENT; i++) {
   render(commentsList, createCommentTemplate());
 }
