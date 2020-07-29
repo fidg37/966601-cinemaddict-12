@@ -17,8 +17,14 @@ const siteHeader = site.querySelector(`.header`);
 const siteMainField = site.querySelector(`main`);
 const siteFooter = site.querySelector(`.footer`);
 
-const render = (container, template, place = InsertPlace.BEFOREEND) => {
-  container.insertAdjacentHTML(place, template);
+const render = (container, template, place = InsertPlace.BEFOREEND, iteration) => {
+  if (iteration) {
+    for (let i = 0; i < iteration; i++) {
+      container.insertAdjacentHTML(place, template);
+    }
+  } else {
+    container.insertAdjacentHTML(place, template);
+  }
 };
 
 const createUserRankTemplate = () => (
@@ -245,24 +251,16 @@ render(siteMainField, createContentFieldTemplate());
 const filmsBoard = siteMainField.querySelector(`.films`);
 const mainFilms = filmsBoard.querySelector(`.films-list__container`);
 
-for (let i = 0; i < IterationCount.CARD; i++) {
-  render(mainFilms, createFilmCardTemplate());
-}
-
+render(mainFilms, createFilmCardTemplate(), InsertPlace.BEFOREEND, IterationCount.CARD);
 render(mainFilms, createLoadButtonTemplate(), InsertPlace.AFTEREND);
-
-for (let i = 0; i < IterationCount.EXTRA; i++) {
-  render(filmsBoard, createExtraBlockTemplate());
-}
+render(filmsBoard, createExtraBlockTemplate(), InsertPlace.BEFOREEND, IterationCount.EXTRA);
 
 const extraBlocks = filmsBoard.querySelectorAll(`.films-list--extra`);
 
 extraBlocks.forEach((item) => {
   let filmsList = item.querySelector(`.films-list__container`);
 
-  for (let i = 0; i < IterationCount.EXTRA; i++) {
-    render(filmsList, createFilmCardTemplate());
-  }
+  render(filmsList, createFilmCardTemplate(), InsertPlace.BEFOREEND, IterationCount.EXTRA);
 });
 
 render(siteFooter, createFooterStatsTemplate());
@@ -278,6 +276,5 @@ render(filmInfoBlock, createPopupControlTemplate());
 
 const commentsList = popup.querySelector(`.film-details__comments-list`);
 
-for (let i = 0; i < IterationCount.COMMENT; i++) {
-  render(commentsList, createCommentTemplate());
-}
+
+render(commentsList, createCommentTemplate(), InsertPlace.BEFOREEND, IterationCount.COMMENT);
