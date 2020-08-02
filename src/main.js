@@ -1,4 +1,5 @@
-import {IterationCount, InsertPlace, SiteElements, render} from "./util";
+import {IterationCount, InsertPlace, SiteElements} from "./constants.js";
+import {render} from "./util";
 import {createUserRankTemplate} from "./View/user-rank.js";
 import {createFilterTemplate} from "./View/filter.js";
 import {createSortTemplate} from "./View/sorting.js";

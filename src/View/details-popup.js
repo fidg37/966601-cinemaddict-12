@@ -1,4 +1,4 @@
-import {SiteElements} from "../util";
+import {SiteElements} from "../constants.js";
 
 export const createDetailsPopupTemplate = () => {
   SiteElements.BODY.classList.add(`hide-overflow`);
