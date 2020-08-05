@@ -12,6 +12,9 @@ import {createDetailsPopupTemplate} from "./View/details-popup.js";
 import {createFilmInfoTemplate} from "./View/film-info.js";
 import {createPopupControlTemplate} from "./View/popup-control.js";
 import {createCommentTemplate} from "./View/comment.js";
+import {createFilmInfo} from "./mock/film.js";
+
+const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
 
 render({container: SiteElements.HEADER, template: createUserRankTemplate()});
 render({container: SiteElements.MAIN, template: createFilterTemplate()});
@@ -37,7 +40,7 @@ render({container: SiteElements.FOOTER, template: createDetailsPopupTemplate(), 
 const popup = SiteElements.BODY.querySelector(`.film-details`);
 const filmInfoBlock = popup.querySelector(`.form-details__top-container`);
 
-render({container: filmInfoBlock, template: createFilmInfoTemplate()});
+render({container: filmInfoBlock, template: createFilmInfoTemplate(films[0])});
 render({container: filmInfoBlock, template: createPopupControlTemplate()});
 
 const commentsList = popup.querySelector(`.film-details__comments-list`);
