@@ -130,6 +130,6 @@ export const createFilmInfo = () => {
     comments: createComment(getRandomInteger({a: 0, b: MAX_COMMENTS})),
     isWatchlist: getRandomBoolean(),
     isFavorite: getRandomBoolean(),
-    isArchive: getRandomBoolean()
+    isHistory: getRandomBoolean()
   };
 };

@@ -10,11 +10,13 @@ import {createExtraBlockTemplate} from "./View/extra-block.js";
 import {createFooterStatsTemplate} from "./View/footer-stats.js";
 import {createDetailsPopupTemplate} from "./View/details-popup.js";
 import {createFilmInfo} from "./mock/film.js";
+import {generateFilter} from "./mock/filter.js";
 
-const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
+export const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
+export const filters = generateFilter(films);
 
 render({container: SiteElements.HEADER, template: createUserRankTemplate()});
-render({container: SiteElements.MAIN, template: createFilterTemplate()});
+render({container: SiteElements.MAIN, template: createFilterTemplate(filters)});
 render({container: SiteElements.MAIN, template: createSortTemplate()});
 render({container: SiteElements.MAIN, template: createContentFieldTemplate()});
 
@@ -35,5 +37,5 @@ filmsBoard.querySelectorAll(`.films-list--extra`).forEach((item) => {
   render({container: filmsList, template: createFilmCardTemplate(films[0]), iteration: IterationCount.EXTRA});
 });
 
-render({container: SiteElements.FOOTER, template: createFooterStatsTemplate()});
+render({container: SiteElements.FOOTER, template: createFooterStatsTemplate(films)});
 // render({container: SiteElements.FOOTER, template: createDetailsPopupTemplate(films[0]), place: InsertPlace.AFTEREND});
