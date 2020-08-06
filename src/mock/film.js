@@ -6,7 +6,7 @@ const MAX_RATING = 10;
 const MAX_WRITERS_COUNT = 3;
 const MAX_ACTORS_COUNT = 5;
 const MAX_GENRES = 3;
-const MAX_COMMENTS = 10;
+const MAX_COMMENTS = 5;
 
 const NAMES = [
   `Dan Duryea`,
@@ -127,7 +127,7 @@ export const createFilmInfo = () => {
     genres: new Array(MAX_GENRES).fill().map(() => GENRES[getRandomInteger({a: 0, b: GENRES.length - 1})]),
     description: getRandomText(textLorem, MAX_SENTENCE_COUNT),
     isAdult: getRandomBoolean(),
-    comment: createComment(getRandomInteger({a: 0, b: MAX_COMMENTS})),
+    comments: createComment(getRandomInteger({a: 0, b: MAX_COMMENTS})),
     isWatchlist: getRandomBoolean(),
     isFavorite: getRandomBoolean(),
     isArchive: getRandomBoolean()

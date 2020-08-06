@@ -31,3 +31,10 @@ export const getRandomInteger = ({a = 0, b = 1, isFractional = false}) => {
 export const getRandomBoolean = () => (
   Boolean(getRandomInteger(0, 1))
 );
+
+export const humanizeDate = (date, isFilm = true) => {
+  if (isFilm) {
+    return date.toLocaleDateString(`en`, {day: `numeric`, year: `numeric`, month: `long`});
+  }
+  return date.toLocaleDateString(`en`, {day: `numeric`, year: `numeric`, month: `long`, hour: `2-digit`, minute: `2-digit`});
+};

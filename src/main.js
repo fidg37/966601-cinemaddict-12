@@ -9,9 +9,6 @@ import {createLoadButtonTemplate} from "./View/load-button.js";
 import {createExtraBlockTemplate} from "./View/extra-block.js";
 import {createFooterStatsTemplate} from "./View/footer-stats.js";
 import {createDetailsPopupTemplate} from "./View/details-popup.js";
-import {createFilmInfoTemplate} from "./View/film-info.js";
-import {createPopupControlTemplate} from "./View/popup-control.js";
-import {createCommentTemplate} from "./View/comment.js";
 import {createFilmInfo} from "./mock/film.js";
 
 const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
@@ -24,7 +21,7 @@ render({container: SiteElements.MAIN, template: createContentFieldTemplate()});
 const filmsBoard = SiteElements.MAIN.querySelector(`.films`);
 const mainFilms = filmsBoard.querySelector(`.films-list__container`);
 
-render({container: mainFilms, template: createFilmCardTemplate(), iteration: IterationCount.CARD});
+render({container: mainFilms, template: createFilmCardTemplate(films[1]), iteration: IterationCount.CARD});
 render({container: mainFilms, template: createLoadButtonTemplate(), place: InsertPlace.AFTEREND});
 render({container: filmsBoard, template: createExtraBlockTemplate(), iteration: IterationCount.EXTRA});
 
@@ -35,14 +32,4 @@ filmsBoard.querySelectorAll(`.films-list--extra`).forEach((item) => {
 });
 
 render({container: SiteElements.FOOTER, template: createFooterStatsTemplate()});
-render({container: SiteElements.FOOTER, template: createDetailsPopupTemplate(), place: InsertPlace.AFTEREND});
-
-const popup = SiteElements.BODY.querySelector(`.film-details`);
-const filmInfoBlock = popup.querySelector(`.form-details__top-container`);
-
-render({container: filmInfoBlock, template: createFilmInfoTemplate(films[0])});
-render({container: filmInfoBlock, template: createPopupControlTemplate()});
-
-const commentsList = popup.querySelector(`.film-details__comments-list`);
-
-render({container: commentsList, template: createCommentTemplate(), iteration: IterationCount.COMMENT});
+//render({container: SiteElements.FOOTER, template: createDetailsPopupTemplate(films[0]), place: InsertPlace.AFTEREND});

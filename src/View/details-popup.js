@@ -1,6 +1,9 @@
 import {SiteElements} from "../constants.js";
+import {createFilmInfoTemplate} from "./film-info.js";
+import {createPopupControlTemplate} from "./popup-control.js";
+import {createCommentTemplate} from "./comment.js";
 
-export const createDetailsPopupTemplate = () => {
+export const createDetailsPopupTemplate = (film) => {
   SiteElements.BODY.classList.add(`hide-overflow`);
 
   return (
@@ -10,13 +13,15 @@ export const createDetailsPopupTemplate = () => {
         <div class="film-details__close">
           <button class="film-details__close-btn" type="button">close</button>
         </div>
+        ${createFilmInfoTemplate(film)}
+        ${createPopupControlTemplate()}
       </div>
 
       <div class="form-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments !== null ? film.comments.length : `0`}</span></h3>
 
-          <ul class="film-details__comments-list"></ul>
+          <ul class="film-details__comments-list">${createCommentTemplate(film)}</ul>
 
           <div class="film-details__new-comment">
             <div for="add-emoji" class="film-details__add-emoji-label"></div>
