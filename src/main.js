@@ -21,15 +21,19 @@ render({container: SiteElements.MAIN, template: createContentFieldTemplate()});
 const filmsBoard = SiteElements.MAIN.querySelector(`.films`);
 const mainFilms = filmsBoard.querySelector(`.films-list__container`);
 
-render({container: mainFilms, template: createFilmCardTemplate(films[1]), iteration: IterationCount.CARD});
+
+for (let i = 0; i < films.length; i++) {
+  render({container: mainFilms, template: createFilmCardTemplate(films[i])});
+}
+
 render({container: mainFilms, template: createLoadButtonTemplate(), place: InsertPlace.AFTEREND});
 render({container: filmsBoard, template: createExtraBlockTemplate(), iteration: IterationCount.EXTRA});
 
 filmsBoard.querySelectorAll(`.films-list--extra`).forEach((item) => {
   let filmsList = item.querySelector(`.films-list__container`);
 
-  render({container: filmsList, template: createFilmCardTemplate(), iteration: IterationCount.EXTRA});
+  render({container: filmsList, template: createFilmCardTemplate(films[0]), iteration: IterationCount.EXTRA});
 });
 
 render({container: SiteElements.FOOTER, template: createFooterStatsTemplate()});
-//render({container: SiteElements.FOOTER, template: createDetailsPopupTemplate(films[0]), place: InsertPlace.AFTEREND});
+// render({container: SiteElements.FOOTER, template: createDetailsPopupTemplate(films[0]), place: InsertPlace.AFTEREND});

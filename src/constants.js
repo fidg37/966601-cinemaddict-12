@@ -2,7 +2,7 @@ const SITE_BODY = document.querySelector(`body`);
 
 export const IterationCount = Object.freeze({
   DEFAULT: 1,
-  CARD: 5,
+  CARD: 20,
   EXTRA: 2,
   COMMENT: 4
 });
