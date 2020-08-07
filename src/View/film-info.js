@@ -5,7 +5,7 @@ export const createFilmInfoTemplate = (film) => {
   } = film;
 
   const createGenreTemplate = (genresArray) => (
-    Object(genresArray).map((genre) => (
+    [...genresArray].map((genre) => (
       `<span class="film-details__genre">${genre}</span>`
     )).join(``)
   );

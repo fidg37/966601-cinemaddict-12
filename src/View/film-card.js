@@ -2,20 +2,20 @@ import {getRandomInteger} from "../util.js";
 
 const MAX_DESCRIPTION_LENGTH = 138;
 
+const getDescription = (text) => {
+  if (text.length < 138) {
+    return text;
+  }
+
+  return text.slice(0, MAX_DESCRIPTION_LENGTH) + `…`;
+};
+
 export const createFilmCardTemplate = (film) => {
   const {poster, title, rating, releaseDate, runtime, genres, comments, description} = film;
   const {hours, minutes} = runtime;
   const genre = genres.length > 1 ? genres[getRandomInteger({a: 0, b: genres.length - 1})] : genres[0];
   const date = releaseDate.toLocaleDateString(`en`, {year: `numeric`});
   const commentsCount = comments === null ? 0 : comments.length;
-
-  const getDescription = (text) => {
-    if (text.length < 138) {
-      return text;
-    }
-
-    return text.slice(0, MAX_DESCRIPTION_LENGTH) + `…`;
-  };
 
   return (`<article class="film-card">
     <h3 class="film-card__title">${title}</h3>

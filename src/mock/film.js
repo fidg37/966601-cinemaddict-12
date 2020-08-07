@@ -6,7 +6,7 @@ const MAX_RATING = 10;
 const MAX_WRITERS_COUNT = 3;
 const MAX_ACTORS_COUNT = 5;
 const MAX_GENRES = 3;
-const MAX_COMMENTS = 5;
+const MAX_COMMENTS = 22;
 
 const NAMES = [
   `Dan Duryea`,
