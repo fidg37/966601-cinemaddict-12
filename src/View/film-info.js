@@ -1,14 +1,18 @@
 import {humanizeDate} from "../util.js";
 
+const createGenreTemplate = (genres) => (
+  [...genres].map((genre) => (
+    `<span class="film-details__genre">${genre}</span>`
+  )).join(``)
+);
+
+const getNamesString = (names) => (
+  names.map((name) => name).join(`, `)
+);
+
 export const createFilmInfoTemplate = (film) => {
   const {poster, title, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAdult
   } = film;
-
-  const createGenreTemplate = (genresArray) => (
-    [...genresArray].map((genre) => (
-      `<span class="film-details__genre">${genre}</span>`
-    )).join(``)
-  );
 
   return `<div class="film-details__info-wrap">
     <div class="film-details__poster">
@@ -36,11 +40,11 @@ export const createFilmInfoTemplate = (film) => {
         </tr>
         <tr class="film-details__row">
           <td class="film-details__term">Writers</td>
-          <td class="film-details__cell">${writers.map((item) => item).join(`, `)}</td>
+          <td class="film-details__cell">${getNamesString(writers)}</td>
         </tr>
         <tr class="film-details__row">
           <td class="film-details__term">Actors</td>
-          <td class="film-details__cell">${actors.map((item) => item).join(`, `)}</td>
+          <td class="film-details__cell">${getNamesString(actors)}</td>
         </tr>
         <tr class="film-details__row">
           <td class="film-details__term">Release Date</td>

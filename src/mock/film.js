@@ -27,6 +27,7 @@ const GENRES = [
   `Film-Noir`,
   `Mystery`
 ];
+
 const COUNTRIES = [
   `Cambodia`,
   `Thailand`,
@@ -36,7 +37,8 @@ const COUNTRIES = [
   `Argentina`,
   `Vietnam`,
   `Nepal`,
-  `Pakistan`];
+  `Pakistan`
+];
 
 const FILM_TITLES = [
   `Made for each other`,
@@ -92,7 +94,6 @@ const getRandomTime = () => {
 };
 
 const createComment = (count) => {
-
   if (count === 0) {
     return null;
   }

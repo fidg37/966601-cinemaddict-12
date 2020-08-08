@@ -3,7 +3,7 @@ import {getRandomInteger} from "../util.js";
 const MAX_DESCRIPTION_LENGTH = 138;
 
 const getDescription = (text) => {
-  if (text.length < 138) {
+  if (text.length < MAX_DESCRIPTION_LENGTH) {
     return text;
   }
 

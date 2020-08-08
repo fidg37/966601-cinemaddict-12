@@ -10,7 +10,6 @@ const loadButtonClickEvent = (evt) => {
   evt.preventDefault();
 
   const renderedFilmCount = mainFilms.querySelectorAll(`.film-card`).length;
-
   if (renderedFilmCount >= films.length) {
     const button = filmsBoard.querySelector(`.films-list__show-more`);
     button.removeEventListener(`click`, loadButtonClickEvent);
@@ -23,7 +22,6 @@ const loadButtonClickEvent = (evt) => {
 };
 
 export const createLoadButton = () => {
-
   if (films.length > MAX_FILMS_PER_STEP) {
     render({container: mainFilms, template: createLoadButtonTemplate(), place: InsertPlace.AFTEREND});
 
