@@ -1,4 +1,4 @@
-import {render} from "../util.js";
+import {renderTemplate} from "../util.js";
 import {filmsBoard} from "../main.js";
 import {createFilmCardTemplate} from "./film-card";
 
@@ -23,6 +23,6 @@ export const createExtra = (filters) => {
   }
 
   filters.filtersExtra.forEach((extra) => {
-    render({container: filmsBoard, template: createExtraBlockTemplate(extra)});
+    renderTemplate({container: filmsBoard, template: createExtraBlockTemplate(extra)});
   });
 };

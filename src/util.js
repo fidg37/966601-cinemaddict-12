@@ -1,6 +1,24 @@
 import {IterationCount, InsertPlace} from "./constants.js";
 
-export const render = ({
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export const renderElement = ({container, element, place = InsertPlace.BEFOREEND}) => {
+  switch (place) {
+    case InsertPlace.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case InsertPlace.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+export const renderTemplate = ({
   container,
   template,
   place = InsertPlace.BEFOREEND,
