@@ -5,12 +5,12 @@ import FilterView from "./View/filter.js";
 import SortingView from "./View/sorting.js";
 import ContentFieldView from "./View/content-field.js";
 import FilmCardView from "./View/film-card.js";
-import {createExtra} from "./View/extra-block.js";
+import ExtraBlockView from "./View/extra-block.js";
 import {createFooterStatsTemplate} from "./View/footer-stats.js";
 import {createDetailsPopupTemplate} from "./View/details-popup.js";
 import {createFilmInfo} from "./mock/film.js";
 import {generateFilter} from "./mock/filter.js";
-import {createLoadButton} from "./load-button-logic.js";
+// import {createLoadButton} from "./load-button-logic.js";
 
 export const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
 export const filters = generateFilter(films);
@@ -28,9 +28,17 @@ for (let i = 0; i < MAX_FILMS_PER_STEP; i++) {
   renderElement({container: mainFilms, element: new FilmCardView(films[i]).getElement()});
 }
 
-//createExtra(filters);
+for (let i = 0; i < filters.filtersExtra.length; i++) {
+  const extraBlock = new ExtraBlockView(filters.filtersExtra[i]).getElement();
+  const extraBlockFilms = extraBlock.querySelector(`.films-list__container`);
+  const extraFilms = Object.values(filters.filtersExtra[i])[0];
+
+  renderElement({container: filmsBoard, element: extraBlock});
+
+  extraFilms.forEach((film) => (renderElement({container: extraBlockFilms, element: new FilmCardView(film).getElement()})));
+}
 
 renderTemplate({container: SiteElements.FOOTER, template: createFooterStatsTemplate(films)});
 //render({container: SiteElements.FOOTER, template: createDetailsPopupTemplate(films[0]), insert: InsertPlace.AFTEREND});
 
-createLoadButton();
+//createLoadButton();
