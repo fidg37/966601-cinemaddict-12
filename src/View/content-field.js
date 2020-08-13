@@ -5,7 +5,7 @@ export default class ContentField {
     this._element = null;
   }
 
-  createContentFieldTemplate() {
+  _createContentFieldTemplate() {
     return (`<section class="films">
       <section class="films-list">
         <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
@@ -15,12 +15,12 @@ export default class ContentField {
   }
 
   getTemplate() {
-    return this.createContentFieldTemplate();
+    return this._createContentFieldTemplate();
   }
 
   getElement() {
     if (!this._element) {
-      return createElement(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

@@ -15,7 +15,11 @@ export default class UserRank {
   }
 
   getElement() {
-    return !this._element ? createElement(this.getTemplate()) : this._element;
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
   }
 
   removeElement() {

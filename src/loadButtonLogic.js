@@ -1,7 +1,7 @@
 import {MAX_FILMS_PER_STEP} from "./constants.js";
 import {renderElement} from "./util.js";
 import LoadButtonView from "./View/load-button.js";
-import FilmCardView from "./View/film-card.js";
+import {renderFilm} from "./renderFilmLogic.js";
 
 let handler;
 
@@ -12,7 +12,7 @@ const loadButtonClickEvent = (films, filmsContainer, button) => (evt) => {
 
   films
     .slice(renderedFilmsCount, renderedFilmsCount + MAX_FILMS_PER_STEP)
-    .forEach((film) => renderElement({container: filmsContainer, element: new FilmCardView(film).getElement()}));
+    .forEach((film) => renderFilm(filmsContainer, film));
 
   if (renderedFilmsCount + MAX_FILMS_PER_STEP >= films.length) {
     button.removeEventListener(`click`, handler);

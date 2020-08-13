@@ -8,7 +8,7 @@ export default class FilmCard {
     this._MAX_DESCRIPTION_LENGTH = 138;
   }
 
-  getDescription(text) {
+  _getDescription(text) {
     if (text.length < this._MAX_DESCRIPTION_LENGTH) {
       return text;
     }
@@ -16,7 +16,7 @@ export default class FilmCard {
     return text.slice(0, this._MAX_DESCRIPTION_LENGTH) + `…`;
   }
 
-  createFilmCardTemplate(film) {
+  _createFilmCardTemplate(film) {
     const {poster, title, rating, releaseDate, runtime, genres, comments, description} = film;
     const {hours, minutes} = runtime;
     const genre = genres.length > 1 ? genres[getRandomInteger({a: 0, b: genres.length - 1})] : genres[0];
@@ -32,7 +32,7 @@ export default class FilmCard {
         <span class="film-card__genre">${genre}</span>
       </p>
       <img src="./images/posters/${poster}" alt="${title} poster" class="film-card__poster">
-      <p class="film-card__description">${this.getDescription(description)}</p>
+      <p class="film-card__description">${this._getDescription(description)}</p>
       <a class="film-card__comments">${commentsCount} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
@@ -43,12 +43,12 @@ export default class FilmCard {
   }
 
   getTemplate() {
-    return this.createFilmCardTemplate(this._film);
+    return this._createFilmCardTemplate(this._film);
   }
 
   getElement() {
     if (!this._element) {
-      return createElement(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

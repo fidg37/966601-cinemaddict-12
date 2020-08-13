@@ -6,19 +6,19 @@ export default class FooterStats {
     this._element = null;
   }
 
-  createFooterStatsTemplate(films) {
+  _createFooterStatsTemplate(films) {
     return (`<section class="footer__statistics">
       <p>${films.length} movies inside</p>
     </section>`);
   }
 
   getTemplate() {
-    return this.createFooterStatsTemplate(this._films);
+    return this._createFooterStatsTemplate(this._films);
   }
 
   getElement() {
     if (!this._element) {
-      return createElement(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
