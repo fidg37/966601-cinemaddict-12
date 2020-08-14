@@ -104,7 +104,7 @@ const createComment = (count) => {
     comments.push({
       text: getRandomText(textLorem, MAX_SENTENCE_COUNT),
       emotion: EMOTIONS[getRandomInteger({a: 0, b: EMOTIONS.length - 1})],
-      autor: NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})],
+      author: NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})],
       date: getRandomDate(),
     });
   }

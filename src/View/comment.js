@@ -12,7 +12,7 @@ export default class Comments {
       return ``;
     }
 
-    return comments.map(({autor, date, text, emotion}) => (
+    return comments.map(({author, date, text, emotion}) => (
       `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
           <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
@@ -20,7 +20,7 @@ export default class Comments {
         <div>
           <p class="film-details__comment-text">${text}</p>
           <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${autor}</span>
+            <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${humanizeDate(date, false)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
