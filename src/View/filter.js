@@ -7,9 +7,9 @@ export default class Filter {
   }
 
   _createFilters(filters) {
-    return ([...filters].map(({name, count}) => {
+    return filters.map(({name, count}) => {
       return `<a href="#${name}" class="main-navigation__item">${this._createFilterName(name)}<span class="main-navigation__item-count">${count}</span></a>`;
-    }).join(``));
+    }).join(``);
   }
 
   _createFilterName(name) {

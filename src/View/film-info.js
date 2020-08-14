@@ -7,18 +7,17 @@ export default class FilmInfo {
   }
 
   _createGenreTemplate(genres) {
-    return ([...genres].map((genre) => (
+    return (genres.map((genre) => (
       `<span class="film-details__genre">${genre}</span>`
     )).join(``));
   }
 
   _getNamesString(names) {
-    return names.map((name) => name).join(`, `);
+    return [...names].join(`, `);
   }
 
-  _createFilmInfoTemplate(film) {
-    const {poster, title, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAdult
-    } = film;
+  _createFilmInfoTemplate({poster, title, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAdult
+  }) {
 
     return `<div class="film-details__info-wrap">
       <div class="film-details__poster">

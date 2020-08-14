@@ -1,23 +1,21 @@
-import {getRandomInteger} from "../util.js";
-import {createElement} from "../util.js";
+import {MAX_DESCRIPTION_LENGTH} from "../constants.js";
+import {getRandomInteger, createElement} from "../util.js";
 
 export default class FilmCard {
   constructor(film) {
     this._film = film;
     this._element = null;
-    this._MAX_DESCRIPTION_LENGTH = 138;
   }
 
   _getDescription(text) {
-    if (text.length < this._MAX_DESCRIPTION_LENGTH) {
+    if (text.length < MAX_DESCRIPTION_LENGTH) {
       return text;
     }
 
-    return text.slice(0, this._MAX_DESCRIPTION_LENGTH) + `…`;
+    return text.slice(0, MAX_DESCRIPTION_LENGTH) + `…`;
   }
 
-  _createFilmCardTemplate(film) {
-    const {poster, title, rating, releaseDate, runtime, genres, comments, description} = film;
+  _createFilmCardTemplate({poster, title, rating, releaseDate, runtime, genres, comments, description}) {
     const {hours, minutes} = runtime;
     const genre = genres.length > 1 ? genres[getRandomInteger({a: 0, b: genres.length - 1})] : genres[0];
     const date = releaseDate.toLocaleDateString(`en`, {year: `numeric`});

@@ -7,16 +7,11 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export const renderElement = ({container, element, place = InsertPlace.BEFOREEND}) => {
-  switch (place) {
-    case InsertPlace.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case InsertPlace.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
+export const renderElement = ({container, element, place = InsertPlace.BEFOREEND}) => (
+  place === InsertPlace.AFTERBEGIN
+    ? container.prepend(element)
+    : container.append(element)
+);
 
 export const renderTemplate = ({
   container,

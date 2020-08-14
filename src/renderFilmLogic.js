@@ -4,16 +4,16 @@ import FilmCardView from "./View/film-card.js";
 import DetailsPopupView from "./View/details-popup.js";
 
 export const renderFilm = (filmsContainer, film, popupContainer = SiteElements.BODY) => {
-  const filmComponent = new FilmCardView(film);
-  const popupComponent = new DetailsPopupView(film);
-  const poster = filmComponent.getElement().querySelector(`.film-card__poster`);
-  const title = filmComponent.getElement().querySelector(`h3`);
-  const commentsCount = filmComponent.getElement().querySelector(`.film-card__comments`);
-  const popupCloseButton = popupComponent.getElement().querySelector(`.film-details__close-btn`);
+  const filmComponent = new FilmCardView(film).getElement();
+  const popupComponent = new DetailsPopupView(film).getElement();
+  const poster = filmComponent.querySelector(`.film-card__poster`);
+  const title = filmComponent.querySelector(`h3`);
+  const commentsCount = filmComponent.querySelector(`.film-card__comments`);
+  const popupCloseButton = popupComponent.querySelector(`.film-details__close-btn`);
 
   const addPopup = () => {
     SiteElements.BODY.classList.toggle(`hide-overflow`);
-    popupContainer.appendChild(popupComponent.getElement());
+    popupContainer.appendChild(popupComponent);
   };
 
   const removePopup = () => {
@@ -39,5 +39,5 @@ export const renderFilm = (filmsContainer, film, popupContainer = SiteElements.B
   title.addEventListener(`click`, popupOpenClickEvent);
   commentsCount.addEventListener(`click`, popupOpenClickEvent);
 
-  renderElement({container: filmsContainer, element: filmComponent.getElement()});
+  renderElement({container: filmsContainer, element: filmComponent});
 };
