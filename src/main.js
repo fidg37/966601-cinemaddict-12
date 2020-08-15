@@ -8,6 +8,7 @@ import FilterView from "./View/filter.js";
 import SortingView from "./View/sorting.js";
 import ContentFieldView from "./View/content-field.js";
 import FooterStatsView from "./View/footer-stats.js";
+import NoFilmsView from "./View/no-films.js";
 import {renderFilm} from "./renderFilmLogic.js";
 import {renderExtra} from "./renderExtraBlockLogic.js";
 
@@ -21,6 +22,10 @@ renderElement({container: SiteElements.MAIN, element: new ContentFieldView().get
 
 export const filmsBoard = SiteElements.MAIN.querySelector(`.films`);
 export const mainFilms = filmsBoard.querySelector(`.films-list__container`);
+
+if (!films.length) {
+  renderElement({container: mainFilms, element: new NoFilmsView().getElement()});
+}
 
 for (let i = 0; i < MAX_FILMS_PER_STEP; i++) {
   renderFilm(mainFilms, films[i]);

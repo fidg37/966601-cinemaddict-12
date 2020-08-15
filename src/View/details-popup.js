@@ -9,7 +9,7 @@ export default class DetailsPopup {
     this._element = null;
   }
 
-  _createDetailsPopupTemplate(film) {
+  _createTemplate(film) {
     return (
       `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -64,7 +64,7 @@ export default class DetailsPopup {
   }
 
   getTemplate() {
-    return this._createDetailsPopupTemplate(this._film);
+    return this._createTemplate(this._film);
   }
 
   getElement() {

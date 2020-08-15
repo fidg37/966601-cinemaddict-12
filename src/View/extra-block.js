@@ -6,7 +6,7 @@ export default class ExtraBlock {
     this._element = null;
   }
 
-  _createExtraBlockTemplate(films) {
+  _createTemplate(films) {
     return (Object.entries(films).map(([filterName]) => {
       return (`<section class="films-list--extra">
       <h2 class="films-list__title">${filterName === `comments` ? `Most commented` : `Top rated`}</h2>
@@ -17,7 +17,7 @@ export default class ExtraBlock {
   }
 
   getTemplate() {
-    return this._createExtraBlockTemplate(this._films);
+    return this._createTemplate(this._films);
   }
 
   getElement() {

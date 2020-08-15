@@ -1,4 +1,4 @@
-import {SiteElements} from "./constants.js";
+import {SiteElements, Keycodes} from "./constants.js";
 import {renderElement} from "./util.js";
 import FilmCardView from "./View/film-card.js";
 import DetailsPopupView from "./View/details-popup.js";
@@ -21,10 +21,18 @@ export const renderFilm = (filmsContainer, film, popupContainer = SiteElements.B
     popupContainer.removeChild(popupContainer.querySelector(`.film-details`));
   };
 
+  const EscKeydownEvent = (evt) => {
+    if (evt.keyCode === Keycodes.ESC) {
+      removePopup();
+      document.removeEventListener(`keydown`, EscKeydownEvent);
+    }
+  };
+
   const popupOpenClickEvent = (evt) => {
     evt.preventDefault();
 
     popupCloseButton.addEventListener(`click`, popupCloseClickEvent);
+    document.addEventListener(`keydown`, EscKeydownEvent);
     addPopup();
   };
 

@@ -16,7 +16,7 @@ export default class FilmInfo {
     return [...names].join(`, `);
   }
 
-  _createFilmInfoTemplate({poster, title, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAdult
+  _createTemplate({poster, title, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAdult
   }) {
 
     return `<div class="film-details__info-wrap">
@@ -78,7 +78,7 @@ export default class FilmInfo {
   }
 
   getTemplate() {
-    return this._createFilmInfoTemplate(this._film);
+    return this._createTemplate(this._film);
   }
 
   getElement() {
