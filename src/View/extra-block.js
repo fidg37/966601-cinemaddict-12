@@ -1,28 +1,34 @@
-import {render} from "../util.js";
-import {filmsBoard} from "../main.js";
-import {createFilmCardTemplate} from "./film-card";
+import {createElement} from "../util.js";
 
-export const createExtraBlockTemplate = (films) => (
-  Object.entries(films).map(([filterName, extraFilms]) => {
-    const filmsLayout = extraFilms.map((film) => (
-      createFilmCardTemplate(film)
-    )).join(``);
-
-    return (`<section class="films-list--extra">
-    <h2 class="films-list__title">${filterName === `comments` ? `Most commented` : `Top rated`}</h2>
-    <div class="films-list__container">
-    ${filmsLayout}
-    </div>
-    </section>`);
-  }).join(``)
-);
-
-export const createExtra = (filters) => {
-  if (filters.filtersExtra === 0) {
-    return;
+export default class ExtraBlock {
+  constructor(films) {
+    this._films = films;
+    this._element = null;
   }
 
-  filters.filtersExtra.forEach((extra) => {
-    render({container: filmsBoard, template: createExtraBlockTemplate(extra)});
-  });
-};
+  _createExtraBlockTemplate(films) {
+    return (Object.entries(films).map(([filterName]) => {
+      return (`<section class="films-list--extra">
+      <h2 class="films-list__title">${filterName === `comments` ? `Most commented` : `Top rated`}</h2>
+      <div class="films-list__container">
+      </div>
+      </section>`);
+    }).join(``));
+  }
+
+  getTemplate() {
+    return this._createExtraBlockTemplate(this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
