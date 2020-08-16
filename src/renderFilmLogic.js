@@ -16,15 +16,15 @@ export const renderFilm = (filmsContainer, film, popupContainer = SiteElements.B
     popupContainer.appendChild(popupComponent);
   };
 
-  const removePopup = () => {
+  const closePopup = () => {
     SiteElements.BODY.classList.toggle(`hide-overflow`);
     popupContainer.removeChild(popupContainer.querySelector(`.film-details`));
   };
 
-  const EscKeydownEvent = (evt) => {
+  const escKeydownEvent = (evt) => {
     if (evt.keyCode === Keycodes.ESC) {
-      removePopup();
-      document.removeEventListener(`keydown`, EscKeydownEvent);
+      closePopup();
+      document.removeEventListener(`keydown`, escKeydownEvent);
     }
   };
 
@@ -32,7 +32,7 @@ export const renderFilm = (filmsContainer, film, popupContainer = SiteElements.B
     evt.preventDefault();
 
     popupCloseButton.addEventListener(`click`, popupCloseClickEvent);
-    document.addEventListener(`keydown`, EscKeydownEvent);
+    document.addEventListener(`keydown`, escKeydownEvent);
     addPopup();
   };
 
@@ -40,7 +40,7 @@ export const renderFilm = (filmsContainer, film, popupContainer = SiteElements.B
     evt.preventDefault();
 
     popupCloseButton.removeEventListener(`click`, popupCloseClickEvent);
-    removePopup();
+    closePopup();
   };
 
   poster.addEventListener(`click`, popupOpenClickEvent);
