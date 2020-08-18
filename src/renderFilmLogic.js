@@ -21,31 +21,31 @@ export const renderFilm = (filmsContainer, film, popupContainer = SiteElements.B
     popupContainer.removeChild(popupContainer.querySelector(`.film-details`));
   };
 
-  const escKeydownEvent = (evt) => {
+  const onPopupKeydown = (evt) => {
     if (evt.keyCode === Keycodes.ESC) {
       closePopup();
-      document.removeEventListener(`keydown`, escKeydownEvent);
+      document.removeEventListener(`keydown`, onPopupKeydown);
     }
   };
 
-  const popupOpenClickEvent = (evt) => {
+  const onFilmCardClick = (evt) => {
     evt.preventDefault();
 
-    popupCloseButton.addEventListener(`click`, popupCloseClickEvent);
-    document.addEventListener(`keydown`, escKeydownEvent);
+    popupCloseButton.addEventListener(`click`, onCloseButtonClick);
+    document.addEventListener(`keydown`, onPopupKeydown);
     addPopup();
   };
 
-  const popupCloseClickEvent = (evt) => {
+  const onCloseButtonClick = (evt) => {
     evt.preventDefault();
 
-    popupCloseButton.removeEventListener(`click`, popupCloseClickEvent);
+    popupCloseButton.removeEventListener(`click`, onCloseButtonClick);
     closePopup();
   };
 
-  poster.addEventListener(`click`, popupOpenClickEvent);
-  title.addEventListener(`click`, popupOpenClickEvent);
-  commentsCount.addEventListener(`click`, popupOpenClickEvent);
+  poster.addEventListener(`click`, onFilmCardClick);
+  title.addEventListener(`click`, onFilmCardClick);
+  commentsCount.addEventListener(`click`, onFilmCardClick);
 
   renderElement({container: filmsContainer, element: filmComponent});
 };

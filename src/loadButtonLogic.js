@@ -5,7 +5,7 @@ import {renderFilm} from "./renderFilmLogic.js";
 
 let handler;
 
-const loadButtonClickEvent = (films, filmsContainer, button) => (evt) => {
+const onLoadButtonClick = (films, filmsContainer, button) => (evt) => {
   evt.preventDefault();
 
   const renderedFilmsCount = filmsContainer.querySelectorAll(`.film-card`).length;
@@ -23,7 +23,7 @@ const loadButtonClickEvent = (films, filmsContainer, button) => (evt) => {
 export const createLoadButton = (films, filmsContainer, buttonContainer) => {
   if (films.length > MAX_FILMS_PER_STEP) {
     const button = new LoadButtonView().getElement();
-    handler = loadButtonClickEvent(films, filmsContainer, button);
+    handler = onLoadButtonClick(films, filmsContainer, button);
 
     button.addEventListener(`click`, handler);
 
