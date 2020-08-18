@@ -15,7 +15,7 @@ export default class FilmCard {
     return text.slice(0, MAX_DESCRIPTION_LENGTH) + `…`;
   }
 
-  _createFilmCardTemplate({poster, title, rating, releaseDate, runtime, genres, comments, description}) {
+  _createTemplate({poster, title, rating, releaseDate, runtime, genres, comments, description}) {
     const {hours, minutes} = runtime;
     const genre = genres.length > 1 ? genres[getRandomInteger({a: 0, b: genres.length - 1})] : genres[0];
     const date = releaseDate.toLocaleDateString(`en`, {year: `numeric`});
@@ -41,7 +41,7 @@ export default class FilmCard {
   }
 
   getTemplate() {
-    return this._createFilmCardTemplate(this._film);
+    return this._createTemplate(this._film);
   }
 
   getElement() {

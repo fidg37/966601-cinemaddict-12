@@ -7,7 +7,7 @@ export default class Comments {
     this._element = null;
   }
 
-  _createCommentTemplate({comments}) {
+  _createTemplate({comments}) {
     if (comments === null) {
       return ``;
     }
@@ -30,7 +30,7 @@ export default class Comments {
   }
 
   getTemplate() {
-    return this._createCommentTemplate(this._film);
+    return this._createTemplate(this._film);
   }
 
   getElement() {

@@ -1,4 +1,4 @@
-import {SiteElements} from "./constants.js";
+import {SiteElements, Keycodes} from "./constants.js";
 import {renderElement} from "./util.js";
 import FilmCardView from "./View/film-card.js";
 import DetailsPopupView from "./View/details-popup.js";
@@ -16,28 +16,36 @@ export const renderFilm = (filmsContainer, film, popupContainer = SiteElements.B
     popupContainer.appendChild(popupComponent);
   };
 
-  const removePopup = () => {
+  const closePopup = () => {
     SiteElements.BODY.classList.toggle(`hide-overflow`);
     popupContainer.removeChild(popupContainer.querySelector(`.film-details`));
   };
 
-  const popupOpenClickEvent = (evt) => {
+  const onPopupKeydown = (evt) => {
+    if (evt.keyCode === Keycodes.ESC) {
+      closePopup();
+      document.removeEventListener(`keydown`, onPopupKeydown);
+    }
+  };
+
+  const onFilmCardClick = (evt) => {
     evt.preventDefault();
 
-    popupCloseButton.addEventListener(`click`, popupCloseClickEvent);
+    popupCloseButton.addEventListener(`click`, onCloseButtonClick);
+    document.addEventListener(`keydown`, onPopupKeydown);
     addPopup();
   };
 
-  const popupCloseClickEvent = (evt) => {
+  const onCloseButtonClick = (evt) => {
     evt.preventDefault();
 
-    popupCloseButton.removeEventListener(`click`, popupCloseClickEvent);
-    removePopup();
+    popupCloseButton.removeEventListener(`click`, onCloseButtonClick);
+    closePopup();
   };
 
-  poster.addEventListener(`click`, popupOpenClickEvent);
-  title.addEventListener(`click`, popupOpenClickEvent);
-  commentsCount.addEventListener(`click`, popupOpenClickEvent);
+  poster.addEventListener(`click`, onFilmCardClick);
+  title.addEventListener(`click`, onFilmCardClick);
+  commentsCount.addEventListener(`click`, onFilmCardClick);
 
   renderElement({container: filmsContainer, element: filmComponent});
 };

@@ -5,12 +5,12 @@ export default class LoadButton {
     this._element = null;
   }
 
-  _createLoadButtonTemplate() {
+  _createTemplate() {
     return (`<button class="films-list__show-more">Show more</button>`);
   }
 
   getTemplate() {
-    return this._createLoadButtonTemplate();
+    return this._createTemplate();
   }
 
   getElement() {
