@@ -20,18 +20,14 @@ export default class MovieList {
 
   init() {
     this._renderContentField();
-
+    // тут не стал выносить условие в функцию _renderNoFilms т.к. пришлось бы его дублировать в _renderExtraBlock
     if (!this._films.length) {
       this._renderNoFilms();
       return;
     }
 
     this._renderFilms(0, MAX_FILMS_PER_STEP);
-
-    if (this._films.length > MAX_FILMS_PER_STEP) {
-      this._renderLoadButton();
-    }
-
+    this._renderLoadButton();
     this._renderExtraBlock();
   }
 
@@ -67,7 +63,6 @@ export default class MovieList {
     };
 
     const onFilmCardClick = () => {
-
       popupComponent.setClickHandler(onPopupClose);
       popupComponent.setKeydownHandler(onPopupClose);
       addPopup();
@@ -85,18 +80,22 @@ export default class MovieList {
   }
 
   _renderExtraBlock() {
-    for (let i = 0; i < this._filters.filtersExtra.length; i++) {
-      const extraBlockComponent = new ExtraBlockView(this._filters.filtersExtra[i]);
+    this._filters.filtersExtra.forEach((extraData) => {
+      const extraBlockComponent = new ExtraBlockView(extraData);
       const extraBlockFilms = extraBlockComponent.getElement().querySelector(`.films-list__container`);
-      const extraFilms = Object.values(this._filters.filtersExtra[i])[0];
+      const extraFilms = Object.values(extraData)[0];
 
       render({container: this._contentFieldComponent.getElement(), child: extraBlockComponent});
 
       extraFilms.forEach((film) => (this._renderFilm(film, extraBlockFilms)));
-    }
+    });
   }
 
   _renderLoadButton() {
+    if (this._films.length < MAX_FILMS_PER_STEP) {
+      return;
+    }
+
     const buttonComponent = new LoadButtonView();
     const buttonContainer = this._contentFieldComponent.getElement().querySelector(`.films-list`);
 
