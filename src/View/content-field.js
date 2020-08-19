@@ -1,10 +1,6 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 
-export default class ContentField {
-  constructor() {
-    this._element = null;
-  }
-
+export default class ContentField extends AbstractView {
   _createTemplate() {
     return (`<section class="films">
       <section class="films-list">
@@ -16,17 +12,5 @@ export default class ContentField {
 
   getTemplate() {
     return this._createTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

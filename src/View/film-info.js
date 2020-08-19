@@ -1,9 +1,11 @@
-import {humanizeDate, createElement} from "../util.js";
+import AbstractView from "./abstract.js";
+import {humanizeDate} from "../util.js";
 
-export default class FilmInfo {
+export default class FilmInfo extends AbstractView {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
   _createGenreTemplate(genres) {
@@ -79,17 +81,5 @@ export default class FilmInfo {
 
   getTemplate() {
     return this._createTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

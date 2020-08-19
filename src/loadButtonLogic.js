@@ -1,5 +1,5 @@
 import {MAX_FILMS_PER_STEP} from "./constants.js";
-import {renderElement} from "./util.js";
+import {render} from "./util.js";
 import LoadButtonView from "./View/load-button.js";
 import {renderFilm} from "./renderFilmLogic.js";
 
@@ -27,6 +27,6 @@ export const createLoadButton = (films, filmsContainer, buttonContainer) => {
 
     button.addEventListener(`click`, handler);
 
-    renderElement({container: buttonContainer, element: button});
+    render({container: buttonContainer, child: button});
   }
 };

@@ -1,10 +1,12 @@
 import {MAX_DESCRIPTION_LENGTH} from "../constants.js";
-import {getRandomInteger, createElement} from "../util.js";
+import AbstractView from "./abstract.js";
+import {getRandomInteger} from "../util.js";
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
   _getDescription(text) {
@@ -42,17 +44,5 @@ export default class FilmCard {
 
   getTemplate() {
     return this._createTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

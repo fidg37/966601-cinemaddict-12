@@ -1,12 +1,13 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
 import CommentsView from "./comment.js";
 
-export default class DetailsPopup {
+export default class DetailsPopup extends AbstractView {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
   _createTemplate(film) {
@@ -65,17 +66,5 @@ export default class DetailsPopup {
 
   getTemplate() {
     return this._createTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

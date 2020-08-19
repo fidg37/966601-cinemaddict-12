@@ -1,10 +1,6 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 
-export default class PopupControl {
-  constructor() {
-    this._element = null;
-  }
-
+export default class PopupControl extends AbstractView {
   _createTemplate() {
     return (`<section class="film-details__controls">
       <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
@@ -20,17 +16,5 @@ export default class PopupControl {
 
   getTemplate() {
     return this._createTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

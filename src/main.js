@@ -1,5 +1,5 @@
 import {IterationCount, SiteElements, MAX_FILMS_PER_STEP} from "./constants.js";
-import {renderElement} from "./util";
+import {render} from "./util";
 import {createFilmInfo} from "./mock/film.js";
 import {generateFilter} from "./mock/filter.js";
 import {createLoadButton} from "./loadButtonLogic.js";
@@ -15,16 +15,16 @@ import {renderExtra} from "./renderExtraBlockLogic.js";
 export const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
 export const filters = generateFilter(films);
 
-renderElement({container: SiteElements.HEADER, element: new UserRankView().getElement()});
-renderElement({container: SiteElements.MAIN, element: new FilterView(filters).getElement()});
-renderElement({container: SiteElements.MAIN, element: new SortingView().getElement()});
-renderElement({container: SiteElements.MAIN, element: new ContentFieldView().getElement()});
+render({container: SiteElements.HEADER, child: new UserRankView()});
+render({container: SiteElements.MAIN, child: new FilterView(filters)});
+render({container: SiteElements.MAIN, child: new SortingView()});
+render({container: SiteElements.MAIN, child: new ContentFieldView()});
 
 export const filmsBoard = SiteElements.MAIN.querySelector(`.films`);
 export const mainFilms = filmsBoard.querySelector(`.films-list__container`);
 
 if (!films.length) {
-  renderElement({container: mainFilms, element: new NoFilmsView().getElement()});
+  render({container: mainFilms, child: new NoFilmsView()});
 }
 
 for (let i = 0; i < MAX_FILMS_PER_STEP; i++) {
@@ -33,7 +33,7 @@ for (let i = 0; i < MAX_FILMS_PER_STEP; i++) {
 
 renderExtra(filters, filmsBoard);
 
-renderElement({container: SiteElements.FOOTER, element: new FooterStatsView(films).getElement()});
+render({container: SiteElements.FOOTER, child: new FooterStatsView(films)});
 
 const buttonContainer = filmsBoard.querySelector(`.films-list`);
 

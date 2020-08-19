@@ -1,10 +1,11 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 import {humanizeDate} from "../util.js";
 
-export default class Comments {
+export default class Comments extends AbstractView {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
   _createTemplate({comments}) {
@@ -31,17 +32,5 @@ export default class Comments {
 
   getTemplate() {
     return this._createTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
