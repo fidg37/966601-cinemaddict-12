@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {humanizeDate} from "../util.js";
+import {humanizeDate} from "../utils/film.js";
 
 export default class FilmInfo extends AbstractView {
   constructor(film) {

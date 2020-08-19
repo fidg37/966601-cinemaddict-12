@@ -1,11 +1,11 @@
 import {IterationCount, SiteElements} from "./constants.js";
-import {render} from "./util";
+import {render} from "./utils/render.js";
 import {createFilmInfo} from "./mock/film.js";
 import {generateFilter} from "./mock/filter.js";
-import UserRankView from "./View/user-rank.js";
-import FilterView from "./View/filter.js";
-import SortingView from "./View/sorting.js";
-import FooterStatsView from "./View/footer-stats.js";
+import UserRankView from "./view/user-rank.js";
+import FilterView from "./view/filter.js";
+import SortingView from "./view/sorting.js";
+import FooterStatsView from "./view/footer-stats.js";
 import MovieList from "./presenter/movieList.js";
 
 export const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);

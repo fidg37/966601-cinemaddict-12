@@ -1,6 +1,7 @@
-import {MAX_DESCRIPTION_LENGTH} from "../constants.js";
 import AbstractView from "./abstract.js";
-import {getRandomInteger} from "../util.js";
+import {getRandomInteger} from "../utils/common.js";
+
+const MAX_DESCRIPTION_LENGTH = 138;
 
 export default class FilmCard extends AbstractView {
   constructor(film) {
@@ -53,21 +54,11 @@ export default class FilmCard extends AbstractView {
     this._callback.click();
   }
 
-  setPosterClickHandler(callback) {
+  setClickHandler(callback) {
     this._callback.click = callback;
 
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._clickHandler);
-  }
-
-  setTitleClickHandler(callback) {
-    this._callback.click = callback;
-
     this.getElement().querySelector(`h3`).addEventListener(`click`, this._clickHandler);
-  }
-
-  setCommentsClickHandler(callback) {
-    this._callback.click = callback;
-
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._clickHandler);
   }
 }

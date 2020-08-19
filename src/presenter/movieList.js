@@ -1,11 +1,11 @@
-import ContentFieldView from "../View/content-field.js";
-import FilmCardView from "../View/film-card.js";
-import DetailsPopupView from "../View/details-popup.js";
-import ExtraBlockView from "../View/extra-block.js";
-import LoadButtonView from "../View/load-button.js";
-import NoFilmsView from "../View/no-films.js";
+import ContentFieldView from "../view/content-field.js";
+import FilmCardView from "../view/film-card.js";
+import DetailsPopupView from "../view/details-popup.js";
+import ExtraBlockView from "../view/extra-block.js";
+import LoadButtonView from "../view/load-button.js";
+import NoFilmsView from "../view/no-films.js";
 import {SiteElements} from "../constants.js";
-import {render} from "../util.js";
+import {render, remove} from "../utils/render.js";
 
 const MAX_FILMS_PER_STEP = 5;
 
@@ -57,13 +57,13 @@ export default class MovieList {
 
     const closePopup = () => {
       SiteElements.BODY.classList.toggle(`hide-overflow`);
-      popupContainer.removeChild(popupContainer.querySelector(`.film-details`));
+      popupComponent.removeClickHandler();
+      popupComponent.removeKeydownHandler();
+      remove(popupComponent);
     };
 
     const onPopupClose = () => {
       closePopup();
-      popupComponent.removeClickHandler();
-      popupComponent.removeKeydownHandler();
     };
 
     const onFilmCardClick = () => {
@@ -73,9 +73,7 @@ export default class MovieList {
       addPopup();
     };
 
-    filmComponent.setPosterClickHandler(onFilmCardClick);
-    filmComponent.setTitleClickHandler(onFilmCardClick);
-    filmComponent.setCommentsClickHandler(onFilmCardClick);
+    filmComponent.setClickHandler(onFilmCardClick);
 
     render({container: filmContainer, child: filmComponent});
   }
@@ -107,7 +105,8 @@ export default class MovieList {
 
       this._renderFilms(renderedFilmsCount, renderedFilmsCount + MAX_FILMS_PER_STEP);
       if (renderedFilmsCount + MAX_FILMS_PER_STEP >= this._films.length) {
-        buttonComponent.getElement().remove();
+        buttonComponent.removeClickHandler();
+        remove(buttonComponent);
       }
     };
 

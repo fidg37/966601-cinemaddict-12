@@ -1,7 +1,5 @@
 const SITE_BODY = document.querySelector(`body`);
 
-export const MAX_DESCRIPTION_LENGTH = 138;
-
 export const Keycodes = {
   ESC: 27
 };

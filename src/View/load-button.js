@@ -25,4 +25,8 @@ export default class LoadButton extends AbstractView {
 
     this.getElement().addEventListener(`click`, this._clickHandler);
   }
+
+  removeClickHandler() {
+    this.getElement().removeEventListener(`click`, this._clickHandler);
+  }
 }
