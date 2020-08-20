@@ -1,9 +1,10 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 
-export default class ExtraBlock {
+export default class ExtraBlock extends AbstractView {
   constructor(films) {
+    super();
+
     this._films = films;
-    this._element = null;
   }
 
   _createTemplate(films) {
@@ -18,17 +19,5 @@ export default class ExtraBlock {
 
   getTemplate() {
     return this._createTemplate(this._films);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

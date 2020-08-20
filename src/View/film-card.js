@@ -1,10 +1,14 @@
-import {MAX_DESCRIPTION_LENGTH} from "../constants.js";
-import {getRandomInteger, createElement} from "../util.js";
+import AbstractView from "./abstract.js";
+import {getRandomInteger} from "../utils/common.js";
 
-export default class FilmCard {
+const MAX_DESCRIPTION_LENGTH = 138;
+
+export default class FilmCard extends AbstractView {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   _getDescription(text) {
@@ -44,15 +48,18 @@ export default class FilmCard {
     return this._createTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
+  _clickHandler(evt) {
+    evt.preventDefault();
 
-    return this._element;
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+
+    const elements = this.getElement().querySelectorAll(`.film-card__poster, h3, .film-card__comments`);
+    elements.forEach((element) => {
+      element.addEventListener(`click`, this._clickHandler);
+    });
   }
 }

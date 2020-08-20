@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomBoolean} from "../util.js";
+import {getRandomInteger, getRandomBoolean} from "../utils/common.js";
 
 const MAX_SENTENCE_COUNT = 5;
 const MIN_RATING = 0.1;

@@ -1,10 +1,6 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 
-export default class UserRank {
-  constructor() {
-    this._element = null;
-  }
-
+export default class UserRank extends AbstractView {
   _createTemplate() {
     return (
       `<section class="header__profile profile">
@@ -16,17 +12,5 @@ export default class UserRank {
 
   getTemplate() {
     return this._createTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

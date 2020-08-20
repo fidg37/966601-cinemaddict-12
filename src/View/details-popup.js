@@ -1,12 +1,16 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
 import CommentsView from "./comment.js";
+import {Keycodes} from "../constants.js";
 
-export default class DetailsPopup {
+export default class DetailsPopup extends AbstractView {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
+    this._clickHandler = this._clickHandler.bind(this);
+    this._keydownHandler = this._keydownHandler.bind(this);
   }
 
   _createTemplate(film) {
@@ -67,15 +71,37 @@ export default class DetailsPopup {
     return this._createTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
+  _clickHandler(evt) {
+    evt.preventDefault();
 
-    return this._element;
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  _keydownHandler(evt) {
+    if (evt.keyCode === Keycodes.ESC) {
+      evt.preventDefault();
+
+      this._callback.keydown();
+    }
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  setKeydownHandler(callback) {
+    this._callback.keydown = callback;
+
+    document.addEventListener(`keydown`, this._keydownHandler);
+  }
+
+  removeClickHandler() {
+    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, this._clickHandler);
+  }
+
+  removeKeydownHandler() {
+    document.removeEventListener(`keydown`, this._keydownHandler);
   }
 }
