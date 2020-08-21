@@ -4,6 +4,7 @@ import DetailsPopupView from "../view/details-popup.js";
 import ExtraBlockView from "../view/extra-block.js";
 import LoadButtonView from "../view/load-button.js";
 import NoFilmsView from "../view/no-films.js";
+import SortingView from "../view/sorting.js";
 import {SiteElements} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 
@@ -16,11 +17,12 @@ export default class MovieList {
 
     this._contentFieldComponent = new ContentFieldView();
     this._noFilmsComponent = new NoFilmsView();
+    this._sortingComponent = new SortingView();
   }
 
   init() {
+    this._renderSorting();
     this._renderContentField();
-    // тут не стал выносить условие в функцию _renderNoFilms т.к. пришлось бы его дублировать в _renderExtraBlock
     if (!this._films.length) {
       this._renderNoFilms();
       return;
@@ -112,5 +114,9 @@ export default class MovieList {
     buttonComponent.setClickHandler(onLoadButtonClick);
 
     render({container: buttonContainer, child: buttonComponent});
+  }
+
+  _renderSorting() {
+    render({container: SiteElements.MAIN, child: this._sortingComponent});
   }
 }
