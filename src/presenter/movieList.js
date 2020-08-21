@@ -5,8 +5,9 @@ import ExtraBlockView from "../view/extra-block.js";
 import LoadButtonView from "../view/load-button.js";
 import NoFilmsView from "../view/no-films.js";
 import SortingView from "../view/sorting.js";
-import {SiteElements} from "../constants.js";
+import {SiteElements, SortType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
+import {getSortedFilms} from "../mock/filter.js";
 
 const MAX_FILMS_PER_STEP = 5;
 
@@ -15,9 +16,13 @@ export default class MovieList {
     this._films = films;
     this._filters = filters;
 
+    this._currentSortType = SortType.DEFAULT;
+
     this._contentFieldComponent = new ContentFieldView();
     this._noFilmsComponent = new NoFilmsView();
     this._sortingComponent = new SortingView();
+
+    this._onSortChange = this._onSortChange.bind(this);
   }
 
   init() {
@@ -116,7 +121,18 @@ export default class MovieList {
     render({container: buttonContainer, child: buttonComponent});
   }
 
+  _onSortChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    console.log(getSortedFilms([...this._films], sortType));
+
+    this._currentSortType = sortType;
+  }
+
   _renderSorting() {
+    this._sortingComponent.setSortTypeChangeHandler(this._onSortChange);
     render({container: SiteElements.MAIN, child: this._sortingComponent});
   }
 }

@@ -1,11 +1,17 @@
+import {SortType} from "../constants.js";
+
 const filmsToFilterMap = {
   watchlist: (films) => films.filter((film) => !film.isHistory && film.isWatchlist).length,
   history: (films) => films.filter((film) => film.isHistory).length,
   favorites: (films) => films.filter((film) => film.isFavorite).length,
 };
 
-const sortByRating = (films) => (
-  {rating: films.sort((a, b) => b.rating - a.rating).slice(0, 2)}
+const sortByRating = (filmA, filmB) => (
+  filmB.rating - filmA.rating
+);
+
+const sortByDate = (filmA, filmB) => (
+  filmB.releaseDate.getTime() - filmA.releaseDate.getTime()
 );
 
 const sortByComments = (films) => {
@@ -15,6 +21,12 @@ const sortByComments = (films) => {
 
   return {comments: sortedArray.slice(0, 2)};
 };
+
+export const getSortedFilms = (films, sortType) => (
+  sortType === SortType.BY_DATE
+    ? films.sort(sortByDate)
+    : films.sort(sortByRating)
+);
 
 const createFiltersCountArray = (films) => (
   Object.entries(filmsToFilterMap).map(([filterName, filterValue]) => (
@@ -27,7 +39,7 @@ const createFiltersCountArray = (films) => (
 
 export const generateFilter = (films) => {
   const extraArray = [];
-  extraArray.push(sortByRating(films));
+  extraArray.push({rating: films.sort(sortByRating).slice(0, 2)});
   extraArray.push(sortByComments(films));
 
   return {
