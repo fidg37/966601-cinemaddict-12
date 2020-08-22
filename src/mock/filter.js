@@ -1,5 +1,7 @@
 import {SortType} from "../constants.js";
 
+const MAX_EXTRA_FILMS_COUNT = 2;
+
 const filmsToFilterMap = {
   watchlist: (films) => films.filter((film) => !film.isHistory && film.isWatchlist).length,
   history: (films) => films.filter((film) => film.isHistory).length,
@@ -15,11 +17,23 @@ const sortByDate = (filmA, filmB) => (
 );
 
 const sortByComments = (films) => {
-  const arrayWithoutComments = films.filter((film) => film.comments === null);
-  const arrayWithComments = films.filter((film) => film.comments).sort((a, b) => b.comments.length - a.comments.length);
-  const sortedArray = arrayWithComments.concat(arrayWithoutComments);
+  const {filmsWithoutComments, filmsWithComments} = films.reduce((acc, film) => {
+    if (film.comments) {
+      acc.filmsWithComments.push(film);
+    } else {
+      acc.filmsWithoutComments.push(film);
+    }
 
-  return {comments: sortedArray.slice(0, 2)};
+    return acc;
+  }, {filmsWithoutComments: [], filmsWithComments: []});
+
+  const sortedFilms = filmsWithComments
+    .sort((filmA, filmB) => filmB.comments.length - filmA.comments.length)
+    .concat(filmsWithoutComments)
+    .slice(0, MAX_EXTRA_FILMS_COUNT)
+  ;
+
+  return sortedFilms;
 };
 
 export const getSortedFilms = (films, sortType) => (
@@ -39,8 +53,8 @@ const createFiltersCountArray = (films) => (
 
 export const generateFilter = (films) => {
   const extraArray = [];
-  extraArray.push({rating: [...films].sort(sortByRating).slice(0, 2)});
-  extraArray.push(sortByComments(films));
+  extraArray.push({rating: [...films].sort(sortByRating).slice(0, MAX_EXTRA_FILMS_COUNT)});
+  extraArray.push({comments: sortByComments(films)});
 
   return {
     filtersCount: createFiltersCountArray(films),
