@@ -21,8 +21,9 @@ export default class MovieList {
     this._contentFieldComponent = new ContentFieldView();
     this._noFilmsComponent = new NoFilmsView();
     this._sortingComponent = new SortingView();
+    this._buttonComponent = new LoadButtonView();
 
-    this._onSortChange = this._onSortChange.bind(this);
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
   }
 
   init() {
@@ -33,8 +34,7 @@ export default class MovieList {
       return;
     }
 
-    this._renderFilms(0, MAX_FILMS_PER_STEP);
-    this._renderLoadButton();
+    this._renderFilmsList();
     this._renderExtraBlock();
   }
 
@@ -80,10 +80,19 @@ export default class MovieList {
     render({container: filmContainer, child: filmComponent});
   }
 
-  _renderFilms(from, to) {
-    this._films
+  _renderFilms(from, to, films) {
+    films
       .slice(from, to)
       .forEach((film) => this._renderFilm(film));
+  }
+
+  _renderFilmsList(films = this._films) {
+    this._renderFilms(0, MAX_FILMS_PER_STEP, films);
+    this._renderLoadButton(films);
+  }
+
+  _clearFilmsList() {
+    this._filmsList.innerHTML = ``;
   }
 
   _renderExtraBlock() {
@@ -98,41 +107,59 @@ export default class MovieList {
     });
   }
 
-  _renderLoadButton() {
+  _renderLoadButton(films) {
     if (this._films.length < MAX_FILMS_PER_STEP) {
       return;
     }
 
-    const buttonComponent = new LoadButtonView();
     const buttonContainer = this._contentFieldComponent.getElement().querySelector(`.films-list`);
 
     const onLoadButtonClick = () => {
       const renderedFilmsCount = this._filmsList.querySelectorAll(`.film-card`).length;
 
-      this._renderFilms(renderedFilmsCount, renderedFilmsCount + MAX_FILMS_PER_STEP);
+      this._renderFilms(renderedFilmsCount, renderedFilmsCount + MAX_FILMS_PER_STEP, films);
       if (renderedFilmsCount + MAX_FILMS_PER_STEP >= this._films.length) {
-        buttonComponent.removeClickHandler();
-        remove(buttonComponent);
+        this._removeLoadButton();
       }
     };
 
-    buttonComponent.setClickHandler(onLoadButtonClick);
+    this._buttonComponent.setClickHandler(onLoadButtonClick);
 
-    render({container: buttonContainer, child: buttonComponent});
+    render({container: buttonContainer, child: this._buttonComponent});
   }
 
-  _onSortChange(sortType) {
+  _removeLoadButton() {
+    this._buttonComponent.removeClickHandler();
+    remove(this._buttonComponent);
+  }
+
+  _renderSortedFilms(sortType) {
+    switch (sortType) {
+      case SortType.BY_RATING:
+        this._renderFilmsList(getSortedFilms([...this._films], sortType));
+        break;
+      case SortType.BY_DATE:
+        this._renderFilmsList(getSortedFilms([...this._films], sortType));
+        break;
+      default:
+        this._renderFilmsList();
+    }
+  }
+
+  _onSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
 
-    console.log(getSortedFilms([...this._films], sortType));
+    this._clearFilmsList();
+    this._removeLoadButton();
+    this._renderSortedFilms(sortType);
 
     this._currentSortType = sortType;
   }
 
   _renderSorting() {
-    this._sortingComponent.setSortTypeChangeHandler(this._onSortChange);
+    this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     render({container: SiteElements.MAIN, child: this._sortingComponent});
   }
 }

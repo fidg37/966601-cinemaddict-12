@@ -39,7 +39,7 @@ const createFiltersCountArray = (films) => (
 
 export const generateFilter = (films) => {
   const extraArray = [];
-  extraArray.push({rating: films.sort(sortByRating).slice(0, 2)});
+  extraArray.push({rating: [...films].sort(sortByRating).slice(0, 2)});
   extraArray.push(sortByComments(films));
 
   return {
