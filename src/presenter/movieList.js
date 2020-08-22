@@ -134,16 +134,12 @@ export default class MovieList {
   }
 
   _renderSortedFilms(sortType) {
-    switch (sortType) {
-      case SortType.BY_RATING:
-        this._renderFilmsList(getSortedFilms([...this._films], sortType));
-        break;
-      case SortType.BY_DATE:
-        this._renderFilmsList(getSortedFilms([...this._films], sortType));
-        break;
-      default:
-        this._renderFilmsList();
+    if (sortType === SortType.DEFAULT) {
+      this._renderFilmsList();
+      return;
     }
+
+    this._renderFilmsList(getSortedFilms([...this._films], sortType));
   }
 
   _onSortTypeChange(sortType) {

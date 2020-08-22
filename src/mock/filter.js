@@ -16,7 +16,7 @@ const sortByDate = (filmA, filmB) => (
   filmB.releaseDate.getTime() - filmA.releaseDate.getTime()
 );
 
-const sortByComments = (films) => {
+const getFilmsSortedByComments = (films) => {
   const {filmsWithoutComments, filmsWithComments} = films.reduce((acc, film) => {
     if (film.comments) {
       acc.filmsWithComments.push(film);
@@ -54,7 +54,7 @@ const createFiltersCountArray = (films) => (
 export const generateFilter = (films) => {
   const extraArray = [];
   extraArray.push({rating: [...films].sort(sortByRating).slice(0, MAX_EXTRA_FILMS_COUNT)});
-  extraArray.push({comments: sortByComments(films)});
+  extraArray.push({comments: getFilmsSortedByComments(films)});
 
   return {
     filtersCount: createFiltersCountArray(films),

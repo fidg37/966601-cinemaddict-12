@@ -25,11 +25,17 @@ export default class Sorting extends AbstractView {
     }
 
     evt.preventDefault();
+    evt.target.classList.add(`sort__button--active`);
+
+    this._currentSort.classList.remove(`sort__button--active`);
+    this._currentSort = evt.target;
+
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 
   setSortTypeChangeHandler(callback) {
     this._callback.sortTypeChange = callback;
+    this._currentSort = this.getElement().querySelector(`a:first-child`);
 
     this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
   }
