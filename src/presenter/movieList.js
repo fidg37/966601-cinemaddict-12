@@ -16,8 +16,6 @@ export default class MovieList {
     this._films = films;
     this._filters = filters;
 
-    this._currentSortType = SortType.DEFAULT;
-
     this._contentFieldComponent = new ContentFieldView();
     this._noFilmsComponent = new NoFilmsView();
     this._sortingComponent = new SortingView();
@@ -143,15 +141,9 @@ export default class MovieList {
   }
 
   _onSortTypeChange(sortType) {
-    if (this._currentSortType === sortType) {
-      return;
-    }
-
     this._clearFilmsList();
     this._removeLoadButton();
     this._renderSortedFilms(sortType);
-
-    this._currentSortType = sortType;
   }
 
   _renderSorting() {
