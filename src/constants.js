@@ -23,3 +23,9 @@ export const SiteElements = Object.freeze({
   MAIN: SITE_BODY.querySelector(`main`),
   FOOTER: SITE_BODY.querySelector(`.footer`)
 });
+
+export const SortType = {
+  DEFAULT: `default`,
+  BY_DATE: `by-date`,
+  BY_RATING: `by-rating`
+};

@@ -57,9 +57,10 @@ export default class FilmCard extends AbstractView {
   setClickHandler(callback) {
     this._callback.click = callback;
 
-    const elements = this.getElement().querySelectorAll(`.film-card__poster, h3, .film-card__comments`);
-    elements.forEach((element) => {
-      element.addEventListener(`click`, this._clickHandler);
-    });
+    this.getElement().querySelectorAll(`.film-card__poster, h3, .film-card__comments`)
+      .forEach((element) => {
+        element.addEventListener(`click`, this._clickHandler);
+      })
+    ;
   }
 }

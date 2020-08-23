@@ -1,20 +1,46 @@
+import {SortType} from "../constants.js";
+
+const MAX_EXTRA_FILMS_COUNT = 2;
+
 const filmsToFilterMap = {
   watchlist: (films) => films.filter((film) => !film.isHistory && film.isWatchlist).length,
   history: (films) => films.filter((film) => film.isHistory).length,
   favorites: (films) => films.filter((film) => film.isFavorite).length,
 };
 
-const sortByRating = (films) => (
-  {rating: films.sort((a, b) => b.rating - a.rating).slice(0, 2)}
+const sortByRating = (filmA, filmB) => (
+  filmB.rating - filmA.rating
 );
 
-const sortByComments = (films) => {
-  const arrayWithoutComments = films.filter((film) => film.comments === null);
-  const arrayWithComments = films.filter((film) => film.comments).sort((a, b) => b.comments.length - a.comments.length);
-  const sortedArray = arrayWithComments.concat(arrayWithoutComments);
+const sortByDate = (filmA, filmB) => (
+  filmB.releaseDate.getTime() - filmA.releaseDate.getTime()
+);
 
-  return {comments: sortedArray.slice(0, 2)};
+const getFilmsSortedByComments = (films) => {
+  const {filmsWithoutComments, filmsWithComments} = films.reduce((acc, film) => {
+    if (film.comments) {
+      acc.filmsWithComments.push(film);
+    } else {
+      acc.filmsWithoutComments.push(film);
+    }
+
+    return acc;
+  }, {filmsWithoutComments: [], filmsWithComments: []});
+
+  const sortedFilms = filmsWithComments
+    .sort((filmA, filmB) => filmB.comments.length - filmA.comments.length)
+    .concat(filmsWithoutComments)
+    .slice(0, MAX_EXTRA_FILMS_COUNT)
+  ;
+
+  return sortedFilms;
 };
+
+export const getSortedFilms = (films, sortType) => (
+  sortType === SortType.BY_DATE
+    ? films.sort(sortByDate)
+    : films.sort(sortByRating)
+);
 
 const createFiltersCountArray = (films) => (
   Object.entries(filmsToFilterMap).map(([filterName, filterValue]) => (
@@ -27,8 +53,8 @@ const createFiltersCountArray = (films) => (
 
 export const generateFilter = (films) => {
   const extraArray = [];
-  extraArray.push(sortByRating(films));
-  extraArray.push(sortByComments(films));
+  extraArray.push({rating: [...films].sort(sortByRating).slice(0, MAX_EXTRA_FILMS_COUNT)});
+  extraArray.push({comments: getFilmsSortedByComments(films)});
 
   return {
     filtersCount: createFiltersCountArray(films),

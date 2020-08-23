@@ -4,8 +4,10 @@ import DetailsPopupView from "../view/details-popup.js";
 import ExtraBlockView from "../view/extra-block.js";
 import LoadButtonView from "../view/load-button.js";
 import NoFilmsView from "../view/no-films.js";
-import {SiteElements} from "../constants.js";
+import SortingView from "../view/sorting.js";
+import {SiteElements, SortType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
+import {getSortedFilms} from "../mock/filter.js";
 
 const MAX_FILMS_PER_STEP = 5;
 
@@ -16,18 +18,21 @@ export default class MovieList {
 
     this._contentFieldComponent = new ContentFieldView();
     this._noFilmsComponent = new NoFilmsView();
+    this._sortingComponent = new SortingView();
+    this._buttonComponent = new LoadButtonView();
+
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
   }
 
   init() {
+    this._renderSorting();
     this._renderContentField();
-    // тут не стал выносить условие в функцию _renderNoFilms т.к. пришлось бы его дублировать в _renderExtraBlock
     if (!this._films.length) {
       this._renderNoFilms();
       return;
     }
 
-    this._renderFilms(0, MAX_FILMS_PER_STEP);
-    this._renderLoadButton();
+    this._renderFilmsList();
     this._renderExtraBlock();
   }
 
@@ -73,10 +78,19 @@ export default class MovieList {
     render({container: filmContainer, child: filmComponent});
   }
 
-  _renderFilms(from, to) {
-    this._films
+  _renderFilms(from, to, films) {
+    films
       .slice(from, to)
       .forEach((film) => this._renderFilm(film));
+  }
+
+  _renderFilmsList(films = this._films) {
+    this._renderFilms(0, MAX_FILMS_PER_STEP, films);
+    this._renderLoadButton(films);
+  }
+
+  _clearFilmsList() {
+    this._filmsList.innerHTML = ``;
   }
 
   _renderExtraBlock() {
@@ -91,26 +105,49 @@ export default class MovieList {
     });
   }
 
-  _renderLoadButton() {
+  _renderLoadButton(films) {
     if (this._films.length < MAX_FILMS_PER_STEP) {
       return;
     }
 
-    const buttonComponent = new LoadButtonView();
     const buttonContainer = this._contentFieldComponent.getElement().querySelector(`.films-list`);
 
     const onLoadButtonClick = () => {
       const renderedFilmsCount = this._filmsList.querySelectorAll(`.film-card`).length;
 
-      this._renderFilms(renderedFilmsCount, renderedFilmsCount + MAX_FILMS_PER_STEP);
+      this._renderFilms(renderedFilmsCount, renderedFilmsCount + MAX_FILMS_PER_STEP, films);
       if (renderedFilmsCount + MAX_FILMS_PER_STEP >= this._films.length) {
-        buttonComponent.removeClickHandler();
-        remove(buttonComponent);
+        this._removeLoadButton();
       }
     };
 
-    buttonComponent.setClickHandler(onLoadButtonClick);
+    this._buttonComponent.setClickHandler(onLoadButtonClick);
 
-    render({container: buttonContainer, child: buttonComponent});
+    render({container: buttonContainer, child: this._buttonComponent});
+  }
+
+  _removeLoadButton() {
+    this._buttonComponent.removeClickHandler();
+    remove(this._buttonComponent);
+  }
+
+  _renderSortedFilms(sortType) {
+    if (sortType === SortType.DEFAULT) {
+      this._renderFilmsList();
+      return;
+    }
+
+    this._renderFilmsList(getSortedFilms([...this._films], sortType));
+  }
+
+  _onSortTypeChange(sortType) {
+    this._clearFilmsList();
+    this._removeLoadButton();
+    this._renderSortedFilms(sortType);
+  }
+
+  _renderSorting() {
+    this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    render({container: SiteElements.MAIN, child: this._sortingComponent});
   }
 }
