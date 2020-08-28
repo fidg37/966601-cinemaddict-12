@@ -8,6 +8,7 @@ import SortingView from "../view/sorting.js";
 import {SiteElements, SortType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import {getSortedFilms} from "../mock/filter.js";
+import FilmPresenter from "./film.js";
 
 const MAX_FILMS_PER_STEP = 5;
 
@@ -47,35 +48,9 @@ export default class MovieList {
   }
 
   _renderFilm(film, filmContainer = this._filmsList) {
-    const filmComponent = new FilmCardView(film);
-    const popupComponent = new DetailsPopupView(film);
-    const popupContainer = SiteElements.MAIN;
+    const filmPresenter = new FilmPresenter(film, filmContainer);
 
-    const addPopup = () => {
-      SiteElements.BODY.classList.toggle(`hide-overflow`);
-      render({container: popupContainer, child: popupComponent});
-    };
-
-    const closePopup = () => {
-      SiteElements.BODY.classList.toggle(`hide-overflow`);
-      popupComponent.removeClickHandler();
-      popupComponent.removeKeydownHandler();
-      remove(popupComponent);
-    };
-
-    const onPopupClose = () => {
-      closePopup();
-    };
-
-    const onFilmCardClick = () => {
-      popupComponent.setClickHandler(onPopupClose);
-      popupComponent.setKeydownHandler(onPopupClose);
-      addPopup();
-    };
-
-    filmComponent.setClickHandler(onFilmCardClick);
-
-    render({container: filmContainer, child: filmComponent});
+    filmPresenter.init();
   }
 
   _renderFilms(from, to, films) {
