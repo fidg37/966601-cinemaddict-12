@@ -2,7 +2,7 @@ import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
 import CommentsView from "./comment.js";
-import {Keycodes} from "../constants.js";
+import {Keycodes, ButtonType} from "../constants.js";
 
 export default class DetailsPopup extends AbstractView {
   constructor(film) {
@@ -11,6 +11,7 @@ export default class DetailsPopup extends AbstractView {
     this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
     this._keydownHandler = this._keydownHandler.bind(this);
+    this._controllsClickHandler = this._controllsClickHandler.bind(this);
   }
 
   _createTemplate(film) {
@@ -22,7 +23,7 @@ export default class DetailsPopup extends AbstractView {
             <button class="film-details__close-btn" type="button">close</button>
           </div>
           ${new FilmInfoView(film).getTemplate()}
-          ${new PopupControlView().getTemplate()}
+          ${new PopupControlView(film).getTemplate()}
         </div>
   
         <div class="form-details__bottom-container">
@@ -81,8 +82,30 @@ export default class DetailsPopup extends AbstractView {
     if (evt.keyCode === Keycodes.ESC) {
       evt.preventDefault();
 
-      this._callback.keydown();
+      this._callback.keydown(this._film);
     }
+  }
+
+  _controllsClickHandler(evt) {
+    if (evt.target.tagName === `INPUT`) {
+      switch (evt.target.name) {
+        case ButtonType.WATCHLIST:
+          this._film.isWatchlist = !this._film.isWatchlist;
+          break;
+        case ButtonType.WATCHED:
+          this._film.isHistory = !this._film.isHistory;
+          break;
+        case ButtonType.FAVORITE:
+          this._film.isFavorite = !this._film.isFavorite;
+          break;
+      }
+    }
+  }
+
+  setControllsClickHandler(callback) {
+    this._callback.controlClick = callback;
+
+    this.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, this._controllsClickHandler);
   }
 
   setClickHandler(callback) {

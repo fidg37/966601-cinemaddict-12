@@ -29,3 +29,9 @@ export const SortType = {
   BY_DATE: `by-date`,
   BY_RATING: `by-rating`
 };
+
+export const ButtonType = {
+  WATCHLIST: `watchlist`,
+  WATCHED: `watched`,
+  FAVORITE: `favorite`
+};

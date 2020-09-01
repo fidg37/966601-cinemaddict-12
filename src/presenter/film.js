@@ -29,6 +29,7 @@ export default class Film {
     this._popupComponent = new DetailsPopupView(this._film);
 
     this._filmComponent.setClickHandler(this._onFilmCardClick);
+    this._filmComponent.setButtonClickHandler(this._changeData);
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
       render({container: this._filmContainer, child: this._filmComponent});
@@ -74,6 +75,7 @@ export default class Film {
   _onFilmCardClick() {
     this._popupComponent.setClickHandler(this._onPopupClose);
     this._popupComponent.setKeydownHandler(this._onPopupClose);
+    this._popupComponent.setControllsClickHandler();
     this._addPopup();
   }
 }
