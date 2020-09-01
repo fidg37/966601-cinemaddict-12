@@ -112,10 +112,13 @@ const createComment = (count) => {
   return comments;
 };
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 export const createFilmInfo = () => {
   const randomPosterNumber = getRandomInteger({a: 0, b: POSTERS.length - 1});
 
   return {
+    id: generateId(),
     poster: POSTERS[randomPosterNumber],
     title: FILM_TITLES[randomPosterNumber],
     rating: getRandomInteger({a: MIN_RATING, b: MAX_RATING, isFractional: true}),

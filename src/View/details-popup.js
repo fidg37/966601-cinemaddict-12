@@ -74,7 +74,7 @@ export default class DetailsPopup extends AbstractView {
   _clickHandler(evt) {
     evt.preventDefault();
 
-    this._callback.click();
+    this._callback.click(this._film);
   }
 
   _keydownHandler(evt) {
