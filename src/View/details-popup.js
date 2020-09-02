@@ -13,10 +13,12 @@ export default class DetailsPopup extends AbstractView {
     this._film = film;
     this._prevInput = null;
 
-    this._clickHandler = this._clickHandler.bind(this);
-    this._keydownHandler = this._keydownHandler.bind(this);
-    this._controllsClickHandler = this._controllsClickHandler.bind(this);
-    this._emojiClickHandler = this._emojiClickHandler.bind(this);
+    this._handlers = {
+      click: this._clickHandler.bind(this),
+      keydown: this._keydownHandler.bind(this),
+      controllsClick: this._controllsClickHandler.bind(this),
+      emojiClick: this._emojiClickHandler.bind(this)
+    };
   }
 
   _createTemplate(film) {
@@ -127,32 +129,32 @@ export default class DetailsPopup extends AbstractView {
   }
 
   setEmojiClickHandler() {
-    this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`click`, this._emojiClickHandler);
+    this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`click`, this._handlers.emojiClick);
   }
 
   setControllsClickHandler(callback) {
     this._callback.controlClick = callback;
 
-    this.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, this._controllsClickHandler);
+    this.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, this._handlers.controllsClick);
   }
 
   setClickHandler(callback) {
     this._callback.click = callback;
 
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._clickHandler);
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._handlers.click);
   }
 
   setKeydownHandler(callback) {
     this._callback.keydown = callback;
 
-    document.addEventListener(`keydown`, this._keydownHandler);
+    document.addEventListener(`keydown`, this._handlers.keydown);
   }
 
   removeClickHandler() {
-    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, this._clickHandler);
+    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, this._handlers.click);
   }
 
   removeKeydownHandler() {
-    document.removeEventListener(`keydown`, this._keydownHandler);
+    document.removeEventListener(`keydown`, this._handlers.keydown);
   }
 }

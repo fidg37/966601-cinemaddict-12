@@ -21,8 +21,10 @@ export default class Film {
     this._popupComponent = null;
     this._popupContainer = SiteElements.MAIN;
 
-    this._onFilmCardClick = this._onFilmCardClick.bind(this);
-    this._onPopupClose = this._onPopupClose.bind(this);
+    this._handlers = {
+      filmCardClick: this._filmCardClickHandler.bind(this),
+      popupClose: this._popupCloseHandler.bind(this)
+    };
   }
 
   init(film, extraType) {
@@ -35,7 +37,7 @@ export default class Film {
     this._filmComponent = new FilmCardView(this._film);
     this._popupComponent = new DetailsPopupView(this._film);
 
-    this._filmComponent.setClickHandler(this._onFilmCardClick);
+    this._filmComponent.setClickHandler(this._handlers.filmCardClick);
     this._filmComponent.setButtonClickHandler(this._changeData);
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
@@ -82,14 +84,14 @@ export default class Film {
     this._mode = Mode.DEFAULT;
   }
 
-  _onPopupClose(film) {
+  _popupCloseHandler(film) {
     this._closePopup();
     this._changeData(film);
   }
 
-  _onFilmCardClick() {
-    this._popupComponent.setClickHandler(this._onPopupClose);
-    this._popupComponent.setKeydownHandler(this._onPopupClose);
+  _filmCardClickHandler() {
+    this._popupComponent.setClickHandler(this._handlers.popupClose);
+    this._popupComponent.setKeydownHandler(this._handlers.popupClose);
     this._popupComponent.setControllsClickHandler();
     this._popupComponent.setEmojiClickHandler();
     this._addPopup();

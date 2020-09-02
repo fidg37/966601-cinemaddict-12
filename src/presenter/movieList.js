@@ -30,9 +30,11 @@ export default class MovieList {
       }
     };
 
-    this._onSortTypeChange = this._onSortTypeChange.bind(this);
-    this._update = this._update.bind(this);
-    this._handleModChange = this._handleModChange.bind(this);
+    this._handlers = {
+      sortTypeChange: this._sortTypeChangeHandler.bind(this),
+      update: this._updateHandler.bind(this),
+      modChange: this._modChangeHandler.bind(this)
+    };
   }
 
   init() {
@@ -47,8 +49,8 @@ export default class MovieList {
     this._renderExtraBlock();
   }
 
-  _handleModChange() {
-    // Не совсем понятно зачем в киномане нужен этот метод, дефолтно больше одного попапа итак открыть нельзя
+  _modChangeHandler() {
+    // Не совсем понятно зачем в киномане нужен этот метод, дефолтно больше одного попапа и так открыть нельзя
     const presenters = Object.values(this._filmPresenters.main);
 
     Object.values(this._filmPresenters.extra).forEach((extra) => (
@@ -71,7 +73,7 @@ export default class MovieList {
   }
 
   _renderFilm(film, filmContainer = this._filmsList, extraType = null) {
-    const filmPresenter = new FilmPresenter(filmContainer, this._update, this._handleModChange);
+    const filmPresenter = new FilmPresenter(filmContainer, this._handlers.update, this._handlers.modChange);
     filmPresenter.init(film, extraType);
 
     if (filmPresenter.isExtraFilm()) {
@@ -81,7 +83,7 @@ export default class MovieList {
     }
   }
 
-  _update(film) {
+  _updateHandler(film) {
     updateItem(this._films, film);
     updateItem(this._sortedFilms, film);
 
@@ -160,14 +162,14 @@ export default class MovieList {
     this._renderFilmsList(this._sortedFilms);
   }
 
-  _onSortTypeChange(sortType) {
+  _sortTypeChangeHandler(sortType) {
     this._clearFilmsList();
     this._removeLoadButton();
     this._renderSortedFilms(sortType);
   }
 
   _renderSorting() {
-    this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._sortingComponent.setSortTypeChangeHandler(this._handlers.sortTypeChange);
     render({container: SiteElements.MAIN, child: this._sortingComponent});
   }
 }

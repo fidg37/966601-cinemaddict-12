@@ -9,8 +9,11 @@ export default class FilmCard extends AbstractView {
     super();
 
     this._film = film;
-    this._clickHandler = this._clickHandler.bind(this);
-    this._buttonClickHandler = this._buttonClickHandler.bind(this);
+
+    this._handlers = {
+      click: this._clickHandler.bind(this),
+      buttonClick: this._buttonClickHandler.bind(this)
+    };
   }
 
   _getDescription(text) {
@@ -81,7 +84,7 @@ export default class FilmCard extends AbstractView {
   setButtonClickHandler(callback) {
     this._callback.buttonClick = callback;
 
-    this.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, this._buttonClickHandler);
+    this.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, this._handlers.buttonClick);
   }
 
   setClickHandler(callback) {
@@ -89,7 +92,7 @@ export default class FilmCard extends AbstractView {
 
     this.getElement().querySelectorAll(`.film-card__poster, h3, .film-card__comments`)
       .forEach((element) => {
-        element.addEventListener(`click`, this._clickHandler);
+        element.addEventListener(`click`, this._handlers.click);
       })
     ;
   }
