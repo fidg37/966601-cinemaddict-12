@@ -4,11 +4,18 @@ import {SiteElements} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import {replace} from "../utils/common.js";
 
+const Mode = {
+  DEFAULT: `default`,
+  POPUP: `popup`
+};
+
 export default class Film {
-  constructor(filmContainer, changeData) {
+  constructor(filmContainer, changeData, changeMode) {
     this._filmContainer = filmContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
+    this._mode = Mode.DEFAULT;
     this._extraType = null;
     this._filmComponent = null;
     this._popupComponent = null;
@@ -38,12 +45,18 @@ export default class Film {
 
     replace(this._filmComponent, prevFilmComponent);
 
-    if (this._popupContainer.contains(prevPopupComponent.getElement())) {
+    if (this._mode === Mode.POPUP) {
       replace(this._popupComponent, prevPopupComponent);
     }
 
     remove(prevFilmComponent);
     remove(prevPopupComponent);
+  }
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closePopup();
+    }
   }
 
   isExtraFilm() {
@@ -65,6 +78,8 @@ export default class Film {
     this._popupComponent.removeClickHandler();
     this._popupComponent.removeKeydownHandler();
     remove(this._popupComponent);
+
+    this._mode = Mode.DEFAULT;
   }
 
   _onPopupClose(film) {
@@ -78,6 +93,9 @@ export default class Film {
     this._popupComponent.setControllsClickHandler();
     this._popupComponent.setEmojiClickHandler();
     this._addPopup();
+
+    this._changeMode();
+    this._mode = Mode.POPUP;
   }
 }
 

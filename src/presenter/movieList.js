@@ -32,6 +32,7 @@ export default class MovieList {
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._update = this._update.bind(this);
+    this._handleModChange = this._handleModChange.bind(this);
   }
 
   init() {
@@ -46,6 +47,18 @@ export default class MovieList {
     this._renderExtraBlock();
   }
 
+  _handleModChange() {
+    const presenters = Object.values(this._filmPresenters.main);
+
+    Object.values(this._filmPresenters.extra).forEach((extra) => (
+      Object.values(extra).forEach((film) => (
+        presenters.push(film)
+      ))
+    ));
+
+    presenters.forEach((presenter) => presenter.resetView());
+  }
+
   _renderContentField() {
     this._filmsList = this._contentFieldComponent.getElement().querySelector(`.films-list__container`);
 
@@ -57,7 +70,7 @@ export default class MovieList {
   }
 
   _renderFilm(film, filmContainer = this._filmsList, extraType = null) {
-    const filmPresenter = new FilmPresenter(filmContainer, this._update);
+    const filmPresenter = new FilmPresenter(filmContainer, this._update, this._handleModChange);
     filmPresenter.init(film, extraType);
 
     if (filmPresenter.isExtraFilm()) {
