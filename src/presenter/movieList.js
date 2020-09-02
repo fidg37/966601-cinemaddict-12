@@ -48,6 +48,7 @@ export default class MovieList {
   }
 
   _handleModChange() {
+    // Не совсем понятно зачем в киномане нужен этот метод, дефолтно больше одного попапа итак открыть нельзя
     const presenters = Object.values(this._filmPresenters.main);
 
     Object.values(this._filmPresenters.extra).forEach((extra) => (
