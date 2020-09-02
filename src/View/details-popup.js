@@ -4,14 +4,19 @@ import PopupControlView from "./popup-control.js";
 import CommentsView from "./comment.js";
 import {Keycodes, ButtonType} from "../constants.js";
 
+const IMG_SIZE = 50;
+
 export default class DetailsPopup extends AbstractView {
   constructor(film) {
     super();
 
     this._film = film;
+    this._prevInput = null;
+
     this._clickHandler = this._clickHandler.bind(this);
     this._keydownHandler = this._keydownHandler.bind(this);
     this._controllsClickHandler = this._controllsClickHandler.bind(this);
+    this._emojiClickHandler = this._emojiClickHandler.bind(this);
   }
 
   _createTemplate(film) {
@@ -33,7 +38,8 @@ export default class DetailsPopup extends AbstractView {
             <ul class="film-details__comments-list">${new CommentsView(film).getTemplate()}</ul>
   
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label"></div>
+              <div for="add-emoji" class="film-details__add-emoji-label">
+              </div>
   
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -100,6 +106,28 @@ export default class DetailsPopup extends AbstractView {
           break;
       }
     }
+  }
+
+  _emojiClickHandler(evt) {
+    if (evt.target.tagName === `IMG`) {
+      const img = evt.target.parentNode.innerHTML;
+      const imgContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
+
+      imgContainer.innerHTML = img;
+      imgContainer.querySelector(`img`).width = IMG_SIZE;
+      imgContainer.querySelector(`img`).height = IMG_SIZE;
+
+      if (this._prevInput) {
+        this._prevInput.removeAttribute(`checked`);
+      }
+
+      this._prevInput = evt.target.parentNode;
+      evt.target.parentNode.setAttribute(`checked`, ``);
+    }
+  }
+
+  setEmojiClickHandler() {
+    this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`click`, this._emojiClickHandler);
   }
 
   setControllsClickHandler(callback) {

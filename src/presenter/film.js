@@ -76,6 +76,7 @@ export default class Film {
     this._popupComponent.setClickHandler(this._onPopupClose);
     this._popupComponent.setKeydownHandler(this._onPopupClose);
     this._popupComponent.setControllsClickHandler();
+    this._popupComponent.setEmojiClickHandler();
     this._addPopup();
   }
 }
