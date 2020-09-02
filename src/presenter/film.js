@@ -31,8 +31,7 @@ export default class Film {
     this._film = film;
     this._extraType = extraType;
 
-    const prevFilmComponent = this._filmComponent;
-    const prevPopupComponent = this._popupComponent;
+    this._savePrevFilmComponents();
 
     this._filmComponent = new FilmCardView(this._film);
     this._popupComponent = new DetailsPopupView(this._film);
@@ -40,19 +39,38 @@ export default class Film {
     this._filmComponent.setClickHandler(this._handlers.filmCardClick);
     this._filmComponent.setButtonClickHandler(this._changeData);
 
-    if (prevFilmComponent === null || prevPopupComponent === null) {
+    if (this._isFirstInit()) {
       render({container: this._filmContainer, child: this._filmComponent});
-      return;
+    } else {
+      this._replaceFilmComponents();
     }
+  }
 
-    replace(this._filmComponent, prevFilmComponent);
+  _savePrevFilmComponents() {
+    this._prevFilmComponent = this._filmComponent;
+    this._prevPopupComponent = this._popupComponent;
+  }
+
+  _isFirstInit() {
+    return this._prevFilmComponent === null || this._prevPopupComponent === null
+      ? true
+      : false
+    ;
+  }
+
+  _replaceFilmComponents() {
+    replace(this._filmComponent, this._prevFilmComponent);
 
     if (this._mode === Mode.POPUP) {
-      replace(this._popupComponent, prevPopupComponent);
+      replace(this._popupComponent, this._prevPopupComponent);
     }
 
-    remove(prevFilmComponent);
-    remove(prevPopupComponent);
+    this._removePrevFilmComponents();
+  }
+
+  _removePrevFilmComponents() {
+    remove(this._prevFilmComponent);
+    remove(this._prevPopupComponent);
   }
 
   resetView() {
