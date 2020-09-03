@@ -27,14 +27,14 @@ export default class Film {
     };
   }
 
-  init(film, extraType) {
-    this._film = film;
+  init(data, extraType) {
+    this._data = data;
     this._extraType = extraType;
 
     this._savePrevComponents();
 
-    this._cardComponent = new FilmCardView(this._film);
-    this._popupComponent = new DetailsPopupView(this._film);
+    this._cardComponent = new FilmCardView(this._data);
+    this._popupComponent = new DetailsPopupView(this._data);
 
     this._setHandlers();
 
