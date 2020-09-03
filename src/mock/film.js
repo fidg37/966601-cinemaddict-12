@@ -1,4 +1,5 @@
 import {getRandomInteger, getRandomBoolean} from "../utils/common.js";
+import uniqueId from "lodash.uniqueid";
 
 const MAX_SENTENCE_COUNT = 5;
 const MIN_RATING = 0.1;
@@ -116,6 +117,7 @@ export const createFilmInfo = () => {
   const randomPosterNumber = getRandomInteger({a: 0, b: POSTERS.length - 1});
 
   return {
+    id: uniqueId(),
     poster: POSTERS[randomPosterNumber],
     title: FILM_TITLES[randomPosterNumber],
     rating: getRandomInteger({a: MIN_RATING, b: MAX_RATING, isFractional: true}),

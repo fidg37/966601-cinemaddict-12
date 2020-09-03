@@ -52,12 +52,13 @@ const createFiltersCountArray = (films) => (
 );
 
 export const generateFilter = (films) => {
-  const extraArray = [];
-  extraArray.push({rating: [...films].sort(sortByRating).slice(0, MAX_EXTRA_FILMS_COUNT)});
-  extraArray.push({comments: getFilmsSortedByComments(films)});
+  const extra = {
+    rating: [...films].sort(sortByRating).slice(0, MAX_EXTRA_FILMS_COUNT),
+    comments: getFilmsSortedByComments(films)
+  };
 
   return {
     filtersCount: createFiltersCountArray(films),
-    filtersExtra: extraArray
+    extra
   };
 };
