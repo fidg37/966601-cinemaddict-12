@@ -50,7 +50,6 @@ export default class MovieList {
   }
 
   _modChangeHandler() {
-    // Не совсем понятно зачем в киномане нужен этот метод, дефолтно больше одного попапа и так открыть нельзя
     const presenters = Object.values(this._filmPresenters.main);
 
     Object.values(this._filmPresenters.extra).forEach((extra) => (
@@ -76,8 +75,8 @@ export default class MovieList {
     const filmPresenter = new FilmPresenter(filmContainer, this._handlers.update, this._handlers.modChange);
     filmPresenter.init(film, extraType);
 
-    if (filmPresenter.isExtraFilm()) {
-      this._filmPresenters.extra[filmPresenter.isExtraFilm()][film.id] = filmPresenter;
+    if (filmPresenter.isExtra()) {
+      this._filmPresenters.extra[filmPresenter.isExtra()][film.id] = filmPresenter;
     } else {
       this._filmPresenters.main[film.id] = filmPresenter;
     }
