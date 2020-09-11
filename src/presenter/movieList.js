@@ -3,16 +3,16 @@ import ExtraBlockView from "../view/extra-block.js";
 import LoadButtonView from "../view/load-button.js";
 import NoFilmsView from "../view/no-films.js";
 import SortingView from "../view/sorting.js";
-import {SiteElements, SortType, UpdateType} from "../constants.js";
+import {SiteElements, SortType, UpdateType, FilterType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
-import {getSortedFilms} from "../mock/filter.js";
 import FilmPresenter from "./film.js";
+import {filter, getSortedFilms, getFilmsSortedByComments} from "../utils/filter.js";
 
 const MAX_FILMS_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(filters, filmsModel) {
-    this._filters = filters;
+  constructor(filterModel, filmsModel) {
+    this._filterModel = filterModel;
     this._filmsModel = filmsModel;
     this._renderedFilmCount = MAX_FILMS_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
@@ -38,6 +38,7 @@ export default class MovieList {
     };
 
     this._filmsModel.addObserver(this._handlers.modelEvent);
+    this._filterModel.addObserver(this._handlers.modelEvent);
   }
 
   init() {
@@ -77,7 +78,7 @@ export default class MovieList {
     remove(this._buttonComponent);
   }
 
-  _clearFilmBoard() {
+  _clearFilmBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
     this._removeComponents();
 
     this._filmPresenters = {
@@ -87,13 +88,23 @@ export default class MovieList {
         rating: {}
       }
     };
+
+    if (resetRenderedFilmCount) {
+      this._renderedFilmCount = MAX_FILMS_PER_STEP;
+    }
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 
   _getFilms() {
+    const filteredFilms = filter[this._filterModel.getFilter()](this._filmsModel.getFilms());
+
     if (this._currentSortType === SortType.DEFAULT) {
-      return this._filmsModel.getFilms();
+      return filteredFilms;
     } else {
-      return getSortedFilms([...this._filmsModel.getFilms()], this._currentSortType);
+      return getSortedFilms(filteredFilms, this._currentSortType);
     }
   }
 
@@ -137,7 +148,7 @@ export default class MovieList {
         this._renderFilmBoard();
         break;
       case UpdateType.MAJOR:
-        this._clearFilmBoard();
+        this._clearFilmBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderFilmBoard();
         break;
     }
@@ -168,7 +179,12 @@ export default class MovieList {
   }
 
   _renderExtraBlock() {
-    Object.entries(this._filters.extra).map(([extraType, films]) => {
+    const extra = {
+      rating: getSortedFilms([...this._filmsModel.getFilms()], SortType.BY_RATING).slice(0, 2),
+      comments: getFilmsSortedByComments([...this._filmsModel.getFilms()]).slice(0, 2)
+    };
+
+    Object.entries(extra).map(([extraType, films]) => {
       const extraBlockComponent = new ExtraBlockView(extraType);
       const extraBlockFilms = extraBlockComponent.getElement().querySelector(`.films-list__container`);
 

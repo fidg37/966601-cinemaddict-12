@@ -2,7 +2,7 @@ import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
 import CommentsView from "./comment.js";
-import {Keycodes, ButtonType} from "../constants.js";
+import {Keycodes, ButtonType, UpdateType} from "../constants.js";
 
 const IMG_SIZE = 50;
 
@@ -83,14 +83,14 @@ export default class DetailsPopup extends AbstractView {
   _clickHandler(evt) {
     evt.preventDefault();
 
-    this._callback.click(this._film);
+    this._callback.click(UpdateType.MINOR, this._film);
   }
 
   _keydownHandler(evt) {
     if (evt.keyCode === Keycodes.ESC) {
       evt.preventDefault();
 
-      this._callback.keydown(this._film);
+      this._callback.keydown(UpdateType.MINOR, this._film);
     }
   }
 
