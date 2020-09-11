@@ -35,3 +35,8 @@ export const ButtonType = {
   WATCHED: `watched`,
   FAVORITE: `favorite`
 };
+
+export const UpdateType = {
+  MINOR: `minor`,
+  MAJOR: `major`
+};

@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 import {getRandomInteger} from "../utils/common.js";
-import {ButtonType} from "../constants.js";
+import {ButtonType, UpdateType} from "../constants.js";
 
 const MAX_DESCRIPTION_LENGTH = 138;
 
@@ -77,7 +77,7 @@ export default class FilmCard extends AbstractView {
           break;
       }
 
-      this._callback.buttonClick(this._film);
+      this._callback.buttonClick(UpdateType.MINOR, this._film);
     }
   }
 
