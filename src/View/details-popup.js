@@ -1,7 +1,6 @@
 import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
-import CommentsView from "./comment.js";
 import {Keycodes, ButtonType, UpdateType} from "../constants.js";
 
 const IMG_SIZE = 50;
@@ -13,11 +12,20 @@ export default class DetailsPopup extends AbstractView {
     this._film = film;
     this._prevInput = null;
 
+    this._emptyComment = {
+      text: null,
+      emotion: null,
+      author: `John Doe`,
+      date: null,
+    };
+
     this._handlers = {
       click: this._clickHandler.bind(this),
       keydown: this._keydownHandler.bind(this),
       controllsClick: this._controllsClickHandler.bind(this),
-      emojiClick: this._emojiClickHandler.bind(this)
+      emojiClick: this._emojiClickHandler.bind(this),
+      newCommentInput: this._newCommentInputHandler.bind(this),
+      submitComment: this._submitCommentHandler.bind(this)
     };
   }
 
@@ -37,7 +45,7 @@ export default class DetailsPopup extends AbstractView {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments !== null ? film.comments.length : `0`}</span></h3>
   
-            <ul class="film-details__comments-list">${new CommentsView(film).getTemplate()}</ul>
+            <ul class="film-details__comments-list"></ul>
   
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">
@@ -49,22 +57,22 @@ export default class DetailsPopup extends AbstractView {
   
               <div class="film-details__emoji-list">
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-                <label class="film-details__emoji-label" for="emoji-smile">
+                <label class="film-details__emoji-label" data-value="smile" for="emoji-smile">
                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                 </label>
   
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-                <label class="film-details__emoji-label" for="emoji-sleeping">
+                <label class="film-details__emoji-label" data-value="sleeping" for="emoji-sleeping">
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
   
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-                <label class="film-details__emoji-label" for="emoji-puke">
+                <label class="film-details__emoji-label" data-value="puke" for="emoji-puke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
   
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-                <label class="film-details__emoji-label" for="emoji-angry">
+                <label class="film-details__emoji-label" data-value="angry" for="emoji-angry">
                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                 </label>
               </div>
@@ -112,6 +120,8 @@ export default class DetailsPopup extends AbstractView {
 
   _emojiClickHandler(evt) {
     if (evt.target.tagName === `IMG`) {
+      this._emptyComment.emotion = evt.target.parentNode.dataset.value;
+
       const img = evt.target.parentNode.innerHTML;
       const imgContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
 
@@ -126,6 +136,34 @@ export default class DetailsPopup extends AbstractView {
       this._prevInput = evt.target.parentNode;
       evt.target.parentNode.setAttribute(`checked`, ``);
     }
+  }
+
+  _newCommentInputHandler(evt) {
+    evt.preventDefault();
+
+    this._emptyComment.text = evt.target.value;
+  }
+
+  _submitCommentHandler(evt) {
+    if (evt.ctrlKey && evt.keyCode === Keycodes.ENTER) {
+      evt.preventDefault();
+
+      this._emptyComment.date = new Date();
+
+      this._film.comments.push(this._emptyComment);
+
+      this._callback.commentSubmit(this._film);
+    }
+  }
+
+  setSubmitCommentHandler(callback) {
+    this._callback.commentSubmit = callback;
+
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._handlers.submitComment);
+  }
+
+  setNewCommentInputHandler() {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._handlers.newCommentInput);
   }
 
   setEmojiClickHandler() {

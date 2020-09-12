@@ -3,7 +3,7 @@ import ExtraBlockView from "../view/extra-block.js";
 import LoadButtonView from "../view/load-button.js";
 import NoFilmsView from "../view/no-films.js";
 import SortingView from "../view/sorting.js";
-import {SiteElements, SortType, UpdateType, FilterType} from "../constants.js";
+import {SiteElements, SortType, UpdateType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import FilmPresenter from "./film.js";
 import {filter, getSortedFilms, getFilmsSortedByComments} from "../utils/filter.js";
@@ -156,6 +156,7 @@ export default class MovieList {
 
   _viewActionHandler(updateType, film) {
     this._filmsModel.updateFilm(updateType, film);
+    this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
 
     if (this._filmPresenters.extra.comments[film.id]) {
       this._filmPresenters.extra.comments[film.id].init(film);

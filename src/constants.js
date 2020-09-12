@@ -1,7 +1,8 @@
 const SITE_BODY = document.querySelector(`body`);
 
 export const Keycodes = {
-  ESC: 27
+  ESC: 27,
+  ENTER: 13
 };
 
 export const IterationCount = Object.freeze({
