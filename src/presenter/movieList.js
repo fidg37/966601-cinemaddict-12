@@ -141,7 +141,7 @@ export default class MovieList {
     }
   }
 
-  _modelEventHandler(updateType, newData) {
+  _modelEventHandler(updateType) {
     switch (updateType) {
       case UpdateType.MINOR:
         this._clearFilmBoard();
