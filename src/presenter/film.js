@@ -1,8 +1,9 @@
 import FilmCardView from "../view/film-card.js";
 import DetailsPopupView from "../view/details-popup.js";
-import {SiteElements} from "../constants.js";
+import {SiteElements, UpdateType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import {replace} from "../utils/common.js";
+import PresenterComment from "../presenter/comment.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -21,9 +22,12 @@ export default class Film {
     this._popupComponent = null;
     this._popupContainer = SiteElements.MAIN;
 
+    this._presenters = [];
+
     this._handlers = {
       cardClick: this._cardClickHandler.bind(this),
-      popupClose: this._popupCloseHandler.bind(this)
+      popupClose: this._popupCloseHandler.bind(this),
+      commentChange: this._commentChangeHandler.bind(this)
     };
   }
 
@@ -36,6 +40,8 @@ export default class Film {
     this._cardComponent = new FilmCardView(this._data);
     this._popupComponent = new DetailsPopupView(this._data);
 
+    this._renderComments(this._data);
+
     this._setHandlers();
 
     if (this._isFirstInit()) {
@@ -43,6 +49,32 @@ export default class Film {
     } else {
       this._replaceComponents();
     }
+  }
+
+  _renderComments(film) {
+    if (!film.comments) {
+      return;
+    }
+
+    film.comments.forEach((comment) => this._renderComment(comment));
+  }
+
+  _renderComment(commentData) {
+    const container = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
+    const comment = new PresenterComment(container, commentData, this._data, this._handlers.commentChange);
+
+    this._presenters.push(comment);
+
+    comment.init();
+  }
+
+  _commentChangeHandler(newFilmData) {
+    this._data = newFilmData;
+
+    this._changeData(UpdateType.MINOR, newFilmData);
+
+    this.init(newFilmData);
+    this._cardClickHandler();
   }
 
   _setHandlers() {
@@ -90,12 +122,18 @@ export default class Film {
   }
 
   _addPopup() {
-    SiteElements.BODY.classList.toggle(`hide-overflow`);
+    if (!SiteElements.BODY.classList.contains(`hide-overflow`)) {
+      SiteElements.BODY.classList.toggle(`hide-overflow`);
+    }
+
     render({container: this._popupContainer, child: this._popupComponent});
   }
 
   _closePopup() {
-    SiteElements.BODY.classList.toggle(`hide-overflow`);
+    if (SiteElements.BODY.classList.contains(`hide-overflow`)) {
+      SiteElements.BODY.classList.toggle(`hide-overflow`);
+    }
+
     this._popupComponent.removeClickHandler();
     this._popupComponent.removeKeydownHandler();
     remove(this._popupComponent);
@@ -103,9 +141,9 @@ export default class Film {
     this._mode = Mode.DEFAULT;
   }
 
-  _popupCloseHandler(film) {
+  _popupCloseHandler(updateType, film) {
     this._closePopup();
-    this._changeData(film);
+    this._changeData(updateType, film);
   }
 
   _cardClickHandler() {
@@ -113,6 +151,8 @@ export default class Film {
     this._popupComponent.setKeydownHandler(this._handlers.popupClose);
     this._popupComponent.setControllsClickHandler();
     this._popupComponent.setEmojiClickHandler();
+    this._popupComponent.setNewCommentInputHandler();
+    this._popupComponent.setSubmitCommentHandler(this._handlers.commentChange);
     this._addPopup();
 
     this._changeMode();

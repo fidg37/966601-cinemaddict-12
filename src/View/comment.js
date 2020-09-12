@@ -1,25 +1,26 @@
 import AbstractView from "./abstract.js";
 import {humanizeDate} from "../utils/film.js";
+import he from "he";
 
-export default class Comments extends AbstractView {
-  constructor(film) {
+export default class Comment extends AbstractView {
+  constructor(data) {
     super();
 
-    this._film = film;
+    this._data = data;
+
+    this._handlers = {
+      deleteButtonClick: this._deleteButtonClickHandler.bind(this)
+    };
   }
 
-  _createTemplate({comments}) {
-    if (comments === null) {
-      return ``;
-    }
-
-    return comments.map(({author, date, text, emotion}) => (
+  _createTemplate({author, date, text, emotion}) {
+    return (
       `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
           <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
         </span>
         <div>
-          <p class="film-details__comment-text">${text}</p>
+          <p class="film-details__comment-text">${he.encode(text)}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${humanizeDate(date, false)}</span>
@@ -27,10 +28,22 @@ export default class Comments extends AbstractView {
           </p>
         </div>
       </li>`
-    )).join(``);
+    );
   }
 
   getTemplate() {
-    return this._createTemplate(this._film);
+    return this._createTemplate(this._data);
+  }
+
+  _deleteButtonClickHandler(evt) {
+    evt.preventDefault();
+
+    this._callback.delete(this._data);
+  }
+
+  setDeleteButtonClickHandler(callback) {
+    this._callback.delete = callback;
+
+    this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._handlers.deleteButtonClick);
   }
 }

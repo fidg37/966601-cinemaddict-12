@@ -1,7 +1,8 @@
 const SITE_BODY = document.querySelector(`body`);
 
 export const Keycodes = {
-  ESC: 27
+  ESC: 27,
+  ENTER: 13
 };
 
 export const IterationCount = Object.freeze({
@@ -34,4 +35,16 @@ export const ButtonType = {
   WATCHLIST: `watchlist`,
   WATCHED: `watched`,
   FAVORITE: `favorite`
+};
+
+export const UpdateType = {
+  MINOR: `minor`,
+  MAJOR: `major`
+};
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
 };
