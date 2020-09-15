@@ -42,7 +42,7 @@ export default class MovieList {
   }
 
   init() {
-    this._clearFilmBoard();
+    // this._clearFilmBoard();
     this._renderFilmBoard();
   }
 
@@ -78,17 +78,20 @@ export default class MovieList {
     this._buttonComponent = new LoadButtonView();
   }
 
-  _removeComponents() {
-    if (this._contentFieldComponent) {
-      remove(this._contentFieldComponent);
-      remove(this._noFilmsComponent);
-      remove(this._sortingComponent);
-      remove(this._buttonComponent);
-    }
+  destroy() {
+    remove(this._contentFieldComponent);
+    remove(this._noFilmsComponent);
+    remove(this._sortingComponent);
+    remove(this._buttonComponent);
+
+    this._contentFieldComponent = null;
+    this._noFilmsComponent = null;
+    this._sortingComponent = null;
+    this._buttonComponent = null;
   }
 
   _clearFilmBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
-    this._removeComponents();
+    this.destroy();
 
     this._filmPresenters = {
       main: {},

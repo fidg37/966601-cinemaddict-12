@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {getRandomInteger} from "../utils/common.js";
+import {getRuntime} from "../utils/film.js";
 import {ButtonType, UpdateType} from "../constants.js";
 
 const MAX_DESCRIPTION_LENGTH = 138;
@@ -26,11 +26,10 @@ export default class FilmCard extends AbstractView {
 
   _createTemplate(film) {
     const {poster, title, totalRating, release, runtime, genre, description} = film.filmInfo;
-    const {isWatchlist, isHistory, isFavorite, comments} = film;
+    const {comments} = film;
+    const {watchlist, alreadyWatched, favorite} = film.userDetails;
     const {date} = release;
-
-    const {hours, minutes} = runtime;
-    const currentGenre = genre.length > 1 ? genre[getRandomInteger({a: 0, b: genre.length - 1})] : genre[0];
+    const currentGenre = genre[0];
     const currentDate = date.toLocaleDateString(`en`, {year: `numeric`});
     const commentsCount = comments === null ? 0 : comments.length;
 
@@ -39,16 +38,16 @@ export default class FilmCard extends AbstractView {
       <p class="film-card__rating">${totalRating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${currentDate}</span>
-        <span class="film-card__duration">${hours}h ${minutes}m</span>
+        <span class="film-card__duration">${getRuntime({time: runtime})}</span>
         <span class="film-card__genre">${currentGenre}</span>
       </p>
       <img src="./images/posters/${poster}" alt="${title} poster" class="film-card__poster">
       <p class="film-card__description">${this._getDescription(description)}</p>
       <a class="film-card__comments">${commentsCount} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchlist ? `film-card__controls-item--active` : ``}" data-type="watchlist">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isHistory ? `film-card__controls-item--active` : ``}" data-type="watched">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? `film-card__controls-item--active` : ``}" data-type="favorite">Mark as favorite</button>
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${watchlist ? `film-card__controls-item--active` : ``}" data-type="watchlist">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${alreadyWatched ? `film-card__controls-item--active` : ``}" data-type="watched">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite ${favorite ? `film-card__controls-item--active` : ``}" data-type="favorite">Mark as favorite</button>
       </form>
     </article>`);
   }
@@ -71,13 +70,14 @@ export default class FilmCard extends AbstractView {
 
       switch (evt.target.dataset.type) {
         case ButtonType.WATCHLIST:
-          this._film.isWatchlist = !this._film.isWatchlist;
+          this._film.userDetails.watchlist = !this._film.userDetails.watchlist;
           break;
         case ButtonType.WATCHED:
-          this._film.isHistory = !this._film.isHistory;
+          this._film.userDetails.alreadyWatched = !this._film.userDetails.alreadyWatched;
+          this._film.userDetails.watchingDate = new Date();
           break;
         case ButtonType.FAVORITE:
-          this._film.isFavorite = !this._film.isFavorite;
+          this._film.userDetails.favorite = !this._film.userDetails.favorite;
           break;
       }
 

@@ -2,9 +2,9 @@ import {FilterType, SortType} from "../constants.js";
 
 export const filter = {
   [FilterType.ALL]: (films) => films,
-  [FilterType.WATCHLIST]: (films) => films.filter((film) => !film.isHistory && film.isWatchlist),
-  [FilterType.HISTORY]: (films) => films.filter((film) => film.isHistory),
-  [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite)
+  [FilterType.WATCHLIST]: (films) => films.filter((film) => !film.userDetails.alreadyWatched && film.userDetails.watchlist),
+  [FilterType.HISTORY]: (films) => films.filter((film) => film.userDetails.alreadyWatched),
+  [FilterType.FAVORITES]: (films) => films.filter((film) => film.userDetails.favorite)
 };
 
 export const getFilmsSortedByComments = (films) => {
@@ -36,6 +36,6 @@ const sortByDate = (filmA, filmB) => (
 
 export const getSortedFilms = (films, sortType) => (
   sortType === SortType.BY_DATE
-    ? films.sort(sortByDate)
-    : films.sort(sortByRating)
+    ? [...films].sort(sortByDate)
+    : [...films].sort(sortByRating)
 );

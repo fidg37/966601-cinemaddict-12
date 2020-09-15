@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {humanizeDate} from "../utils/film.js";
+import {humanizeDate, getRuntime} from "../utils/film.js";
 
 export default class FilmInfo extends AbstractView {
   constructor(film) {
@@ -21,7 +21,6 @@ export default class FilmInfo extends AbstractView {
   _createTemplate(film) {
     const {poster, title, totalRating, release, runtime, genre, description, ageRating, director, writers, actors} = film.filmInfo;
     const {date, releaseCountry} = release;
-    const {hours, minutes} = runtime;
 
     return `<div class="film-details__info-wrap">
       <div class="film-details__poster">
@@ -61,7 +60,7 @@ export default class FilmInfo extends AbstractView {
           </tr>
           <tr class="film-details__row">
             <td class="film-details__term">Runtime</td>
-            <td class="film-details__cell">${hours}h ${minutes}m</td>
+            <td class="film-details__cell">${getRuntime({time: runtime})}</td>
           </tr>
           <tr class="film-details__row">
             <td class="film-details__term">Country</td>

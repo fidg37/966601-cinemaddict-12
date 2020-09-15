@@ -52,13 +52,13 @@ export default class Filter extends AbstractView {
     if (SiteElements.MAIN.classList.contains(`stats--active`)) {
       SiteElements.MAIN.classList.toggle(`stats--active`);
 
-      this._callback.stats.remove();
       this._callback.filterClick(FilterType.ALL);
+      this._callback.stats.remove();
     } else {
       SiteElements.MAIN.classList.toggle(`stats--active`);
 
-      this._callback.stats.render();
       this._callback.filterClick(FilterType.ALL);
+      this._callback.stats.render();
     }
   }
 

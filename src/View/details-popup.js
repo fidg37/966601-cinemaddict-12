@@ -108,13 +108,14 @@ export default class DetailsPopup extends AbstractView {
     if (evt.target.tagName === `INPUT`) {
       switch (evt.target.name) {
         case ButtonType.WATCHLIST:
-          this._film.isWatchlist = !this._film.isWatchlist;
+          this._film.userDetails.watchlist = !this._film.userDetails.watchlist;
           break;
         case ButtonType.WATCHED:
-          this._film.isHistory = !this._film.isHistory;
+          this._film.userDetails.alreadyWatched = !this._film.userDetails.alreadyWatched;
+          this._film.userDetails.watchingDate = new Date();
           break;
         case ButtonType.FAVORITE:
-          this._film.isFavorite = !this._film.isFavorite;
+          this._film.userDetails.favorite = !this._film.userDetails.favorite;
           break;
       }
     }

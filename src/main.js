@@ -1,5 +1,5 @@
 import {IterationCount, SiteElements} from "./constants.js";
-import {remove, render} from "./utils/render.js";
+import {render} from "./utils/render.js";
 import {createFilmInfo} from "./mock/film.js";
 import UserRankView from "./view/user-rank.js";
 import FooterStatsView from "./view/footer-stats.js";
@@ -7,7 +7,7 @@ import MovieList from "./presenter/movieList.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 import FilterPresenter from "./presenter/filter.js";
-import StatsView from "./view/stats.js";
+import StatisticsPresenter from "./presenter/statistics.js";
 
 export const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
 
@@ -19,23 +19,22 @@ const filterModel = new FilterModel();
 render({container: SiteElements.HEADER, child: new UserRankView()});
 render({container: SiteElements.FOOTER, child: new FooterStatsView(films)});
 
-const statsComponent = new StatsView();
+const statisticsPresenter = new StatisticsPresenter(SiteElements.MAIN, filmsModel);
 
-const renderStats = () => {
-  movieListPresenter._clearFilmBoard();
-
-  render({container: SiteElements.MAIN, child: statsComponent});
+const renderStatsHandler = () => {
+  statisticsPresenter.init();
+  movieListPresenter.destroy();
 };
 
-const removeStats = () => {
-  remove(statsComponent);
+const removeStatsHandler = () => {
+  statisticsPresenter.destroy();
   filterPresenter.init();
   movieListPresenter.init();
 };
 
 const statsHandlers = {
-  render: renderStats,
-  remove: removeStats
+  render: renderStatsHandler,
+  remove: removeStatsHandler
 };
 
 const filterPresenter = new FilterPresenter(SiteElements.MAIN, filterModel, filmsModel, statsHandlers);

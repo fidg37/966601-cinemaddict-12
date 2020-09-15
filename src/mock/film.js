@@ -87,13 +87,6 @@ const getRandomDate = () => {
   return new Date(randomDate);
 };
 
-const getRandomTime = () => {
-  const hours = getRandomInteger({a: 0, b: 24});
-  const minutes = getRandomInteger({a: 0, b: 60});
-
-  return {hours, minutes};
-};
-
 const createComment = (count) => {
   if (count === 0) {
     return null;
@@ -133,13 +126,16 @@ export const createFilmInfo = () => {
         date: getRandomDate(),
         releaseCountry: COUNTRIES[getRandomInteger({a: 0, b: COUNTRIES.length - 1})]
       },
-      runtime: getRandomTime(),
+      runtime: getRandomInteger({a: 30, b: 240}),
       genre: new Array(MAX_GENRES).fill().map(() => GENRES[getRandomInteger({a: 0, b: GENRES.length - 1})]),
       description: getRandomText(textLorem, MAX_SENTENCE_COUNT)
     },
 
-    isWatchlist: getRandomBoolean(),
-    isFavorite: getRandomBoolean(),
-    isHistory: getRandomBoolean()
+    userDetails: {
+      watchlist: getRandomBoolean(),
+      alreadyWatched: getRandomBoolean(),
+      watchingDate: getRandomDate(),
+      favorite: getRandomBoolean()
+    }
   };
 };
