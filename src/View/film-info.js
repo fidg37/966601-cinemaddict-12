@@ -18,14 +18,16 @@ export default class FilmInfo extends AbstractView {
     return [...names].join(`, `);
   }
 
-  _createTemplate({poster, title, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAdult
-  }) {
+  _createTemplate(film) {
+    const {poster, title, totalRating, release, runtime, genre, description, ageRating, director, writers, actors} = film.filmInfo;
+    const {date, releaseCountry} = release;
+    const {hours, minutes} = runtime;
 
     return `<div class="film-details__info-wrap">
       <div class="film-details__poster">
         <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
   
-        <p class="film-details__age">${isAdult ? `18+` : ``}</p>
+        <p class="film-details__age">${ageRating ? `18+` : ``}</p>
       </div>
   
       <div class="film-details__info">
@@ -36,7 +38,7 @@ export default class FilmInfo extends AbstractView {
           </div>
   
           <div class="film-details__rating">
-            <p class="film-details__total-rating">${rating}</p>
+            <p class="film-details__total-rating">${totalRating}</p>
           </div>
         </div>
   
@@ -55,20 +57,20 @@ export default class FilmInfo extends AbstractView {
           </tr>
           <tr class="film-details__row">
             <td class="film-details__term">Release Date</td>
-            <td class="film-details__cell">${humanizeDate(releaseDate)}</td>
+            <td class="film-details__cell">${humanizeDate(date)}</td>
           </tr>
           <tr class="film-details__row">
             <td class="film-details__term">Runtime</td>
-            <td class="film-details__cell">${runtime.hours}h ${runtime.minutes}m</td>
+            <td class="film-details__cell">${hours}h ${minutes}m</td>
           </tr>
           <tr class="film-details__row">
             <td class="film-details__term">Country</td>
-            <td class="film-details__cell">${country}</td>
+            <td class="film-details__cell">${releaseCountry}</td>
           </tr>
           <tr class="film-details__row">
             <td class="film-details__term">Genres</td>
             <td class="film-details__cell">
-              ${this._createGenreTemplate(genres)}
+              ${this._createGenreTemplate(genre)}
           </tr>
         </table>
   

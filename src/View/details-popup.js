@@ -2,6 +2,7 @@ import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
 import {Keycodes, ButtonType, UpdateType} from "../constants.js";
+import uniqueId from "lodash.uniqueid";
 
 const IMG_SIZE = 50;
 
@@ -13,7 +14,8 @@ export default class DetailsPopup extends AbstractView {
     this._prevInput = null;
 
     this._emptyComment = {
-      text: null,
+      id: uniqueId(),
+      comment: null,
       emotion: null,
       author: `John Doe`,
       date: null,
@@ -141,7 +143,7 @@ export default class DetailsPopup extends AbstractView {
   _newCommentInputHandler(evt) {
     evt.preventDefault();
 
-    this._emptyComment.text = evt.target.value;
+    this._emptyComment.comment = evt.target.value;
   }
 
   _submitCommentHandler(evt) {

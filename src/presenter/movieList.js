@@ -42,16 +42,23 @@ export default class MovieList {
   }
 
   init() {
+    this._clearFilmBoard();
     this._renderFilmBoard();
   }
 
-  _renderFilmBoard() {
+  _renderFilmBoard({stats = false} = {}) {
     const films = this._getFilms();
     const filmsCount = films.length;
 
     this._setComponents();
 
     this._renderSorting();
+
+    if (stats) {
+      this._renderStats();
+      return;
+    }
+
     this._renderContentField();
     if (!filmsCount) {
       this._renderNoFilms();
@@ -72,10 +79,12 @@ export default class MovieList {
   }
 
   _removeComponents() {
-    remove(this._contentFieldComponent);
-    remove(this._noFilmsComponent);
-    remove(this._sortingComponent);
-    remove(this._buttonComponent);
+    if (this._contentFieldComponent) {
+      remove(this._contentFieldComponent);
+      remove(this._noFilmsComponent);
+      remove(this._sortingComponent);
+      remove(this._buttonComponent);
+    }
   }
 
   _clearFilmBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {

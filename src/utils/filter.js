@@ -27,11 +27,11 @@ export const getFilmsSortedByComments = (films) => {
 };
 
 const sortByRating = (filmA, filmB) => (
-  filmB.rating - filmA.rating
+  filmB.filmInfo.totalRating - filmA.filmInfo.totalRating
 );
 
 const sortByDate = (filmA, filmB) => (
-  filmB.releaseDate.getTime() - filmA.releaseDate.getTime()
+  filmB.filmInfo.release.date.getTime() - filmA.filmInfo.release.date.getTime()
 );
 
 export const getSortedFilms = (films, sortType) => (

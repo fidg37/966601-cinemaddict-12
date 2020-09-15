@@ -48,3 +48,8 @@ export const FilterType = {
   HISTORY: `history`,
   FAVORITES: `favorites`
 };
+
+export const MenuType = {
+  SORT: `sorting`,
+  STATS: `statistics`
+};
