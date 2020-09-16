@@ -2,9 +2,9 @@ import {FilterType, SortType} from "../constants.js";
 
 export const filter = {
   [FilterType.ALL]: (films) => films,
-  [FilterType.WATCHLIST]: (films) => films.filter((film) => !film.isHistory && film.isWatchlist),
-  [FilterType.HISTORY]: (films) => films.filter((film) => film.isHistory),
-  [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite)
+  [FilterType.WATCHLIST]: (films) => films.filter((film) => !film.userDetails.alreadyWatched && film.userDetails.watchlist),
+  [FilterType.HISTORY]: (films) => films.filter((film) => film.userDetails.alreadyWatched),
+  [FilterType.FAVORITES]: (films) => films.filter((film) => film.userDetails.favorite)
 };
 
 export const getFilmsSortedByComments = (films) => {
@@ -27,15 +27,15 @@ export const getFilmsSortedByComments = (films) => {
 };
 
 const sortByRating = (filmA, filmB) => (
-  filmB.rating - filmA.rating
+  filmB.filmInfo.totalRating - filmA.filmInfo.totalRating
 );
 
 const sortByDate = (filmA, filmB) => (
-  filmB.releaseDate.getTime() - filmA.releaseDate.getTime()
+  filmB.filmInfo.release.date.getTime() - filmA.filmInfo.release.date.getTime()
 );
 
 export const getSortedFilms = (films, sortType) => (
   sortType === SortType.BY_DATE
-    ? films.sort(sortByDate)
-    : films.sort(sortByRating)
+    ? [...films].sort(sortByDate)
+    : [...films].sort(sortByRating)
 );

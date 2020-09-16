@@ -87,13 +87,6 @@ const getRandomDate = () => {
   return new Date(randomDate);
 };
 
-const getRandomTime = () => {
-  const hours = getRandomInteger({a: 0, b: 24});
-  const minutes = getRandomInteger({a: 0, b: 60});
-
-  return {hours, minutes};
-};
-
 const createComment = (count) => {
   if (count === 0) {
     return null;
@@ -103,7 +96,8 @@ const createComment = (count) => {
 
   for (let i = 0; i < count; i++) {
     comments.push({
-      text: getRandomText(textLorem, MAX_SENTENCE_COUNT),
+      id: uniqueId(),
+      comment: getRandomText(textLorem, MAX_SENTENCE_COUNT),
       emotion: EMOTIONS[getRandomInteger({a: 0, b: EMOTIONS.length - 1})],
       author: NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})],
       date: getRandomDate(),
@@ -118,21 +112,30 @@ export const createFilmInfo = () => {
 
   return {
     id: uniqueId(),
-    poster: POSTERS[randomPosterNumber],
-    title: FILM_TITLES[randomPosterNumber],
-    rating: getRandomInteger({a: MIN_RATING, b: MAX_RATING, isFractional: true}),
-    director: NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})],
-    writers: new Array(MAX_WRITERS_COUNT).fill().map(() => NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})]),
-    actors: new Array(MAX_ACTORS_COUNT).fill().map(() => NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})]),
-    releaseDate: getRandomDate(),
-    runtime: getRandomTime(),
-    country: COUNTRIES[getRandomInteger({a: 0, b: COUNTRIES.length - 1})],
-    genres: new Array(MAX_GENRES).fill().map(() => GENRES[getRandomInteger({a: 0, b: GENRES.length - 1})]),
-    description: getRandomText(textLorem, MAX_SENTENCE_COUNT),
-    isAdult: getRandomBoolean(),
     comments: createComment(getRandomInteger({a: 0, b: MAX_COMMENTS})),
-    isWatchlist: getRandomBoolean(),
-    isFavorite: getRandomBoolean(),
-    isHistory: getRandomBoolean()
+    filmInfo: {
+      title: FILM_TITLES[randomPosterNumber],
+      alternativeTitle: FILM_TITLES[randomPosterNumber],
+      totalRating: getRandomInteger({a: MIN_RATING, b: MAX_RATING, isFractional: true}),
+      poster: POSTERS[randomPosterNumber],
+      ageRating: getRandomBoolean(),
+      director: NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})],
+      writers: new Array(MAX_WRITERS_COUNT).fill().map(() => NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})]),
+      actors: new Array(MAX_ACTORS_COUNT).fill().map(() => NAMES[getRandomInteger({a: 0, b: NAMES.length - 1})]),
+      release: {
+        date: getRandomDate(),
+        releaseCountry: COUNTRIES[getRandomInteger({a: 0, b: COUNTRIES.length - 1})]
+      },
+      runtime: getRandomInteger({a: 30, b: 240}),
+      genre: new Array(MAX_GENRES).fill().map(() => GENRES[getRandomInteger({a: 0, b: GENRES.length - 1})]),
+      description: getRandomText(textLorem, MAX_SENTENCE_COUNT)
+    },
+
+    userDetails: {
+      watchlist: getRandomBoolean(),
+      alreadyWatched: getRandomBoolean(),
+      watchingDate: getRandomDate(),
+      favorite: getRandomBoolean()
+    }
   };
 };

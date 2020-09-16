@@ -4,10 +4,11 @@ import {replace} from "../utils/common.js";
 import {UpdateType} from "../constants.js";
 
 export default class Filter {
-  constructor(renderPosition, filterModel, filmsModel) {
+  constructor(renderPosition, filterModel, filmsModel, statsCallbacks) {
     this._renderPosition = renderPosition;
     this._filterModel = filterModel;
     this._filmsModel = filmsModel;
+    this._statsCallbacks = statsCallbacks;
     this._currentFilter = null;
 
     this._filterComponent = null;
@@ -28,6 +29,7 @@ export default class Filter {
     this._filterComponent = new FilterView(this._filmsModel.getFilms(), this._currentFilter);
 
     this._filterComponent.setFilterClickHandler(this._handlers.filterTypeChange);
+    this._filterComponent.setStatsClickHandler(this._statsCallbacks);
 
     if (prevFilterComponent === null) {
       render({container: this._renderPosition, child: this._filterComponent});
