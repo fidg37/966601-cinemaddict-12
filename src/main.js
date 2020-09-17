@@ -8,8 +8,17 @@ import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
+import Api from "./api.js";
+
+const AUTHORIZATION = `Basic akfgIIO558#asfmWff9`;
+const EDN_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
 export const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
+const api = new Api(EDN_POINT, AUTHORIZATION);
+
+api.getFilms().then((array) => {
+  console.log(array);
+});
 
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
