@@ -172,10 +172,11 @@ export default class MovieList {
   }
 
   _viewActionHandler(updateType, film) {
-    this._filmsModel.updateFilm(updateType, film);
-    this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
-
-    this._api.updateFilm(film);
+    this._api.updateFilm(film)
+      .then((response) => {
+        this._filmsModel.updateFilm(updateType, response);
+        this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
+      });
 
     if (this._filmPresenters.extra.comments[film.id]) {
       this._filmPresenters.extra.comments[film.id].init(film);
