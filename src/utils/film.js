@@ -1,4 +1,5 @@
 export const humanizeDate = (date, isFilm = true) => {
+  date = new Date(date);
   if (isFilm) {
     return date.toLocaleDateString(`en`, {day: `numeric`, year: `numeric`, month: `long`});
   }

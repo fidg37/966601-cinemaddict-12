@@ -38,6 +38,7 @@ export const ButtonType = {
 };
 
 export const UpdateType = {
+  PATCH: `patch`,
   MINOR: `minor`,
   MAJOR: `major`,
   INIT: `INIT`

@@ -4,15 +4,15 @@ export default class Comments extends Observer {
   constructor() {
     super();
 
-    this._comments = [];
+    this._comments = {};
   }
 
-  setComments(comments) {
-    this._comments = [...comments];
+  setComments(filmId, comments) {
+    this._comments[filmId] = comments;
   }
 
-  getComments() {
-    return this._comments;
+  getComments(filmId) {
+    return this._comments[filmId];
   }
 
   deleteComment(updateType, filmId, deletedComment) {
@@ -23,8 +23,8 @@ export default class Comments extends Observer {
     }
 
     this._comments = [
-      ...this._films.slice(0, index),
-      ...this._films.slice(index + 1)
+      ...this._comments[filmId].slice(0, index),
+      ...this._comments[filmId].slice(index + 1)
     ];
 
     this._notify(updateType);
@@ -33,6 +33,6 @@ export default class Comments extends Observer {
   addComment(updateType, filmId, newComment) {
     this._comments[filmId].push(newComment);
 
-    this._notify(updateType, newComment);
+    this._notify(updateType);
   }
 }

@@ -1,11 +1,11 @@
-import {IterationCount, SiteElements, UpdateType} from "./constants.js";
+import {SiteElements, UpdateType} from "./constants.js";
 import {render} from "./utils/render.js";
-import {createFilmInfo} from "./mock/film.js";
 import UserRankView from "./view/user-rank.js";
 import FooterStatsView from "./view/footer-stats.js";
 import MovieList from "./presenter/movieList.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
+import CommentsModel from "./model/comments.js";
 import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
 import Api from "./api.js";
@@ -18,6 +18,7 @@ const api = new Api(EDN_POINT, AUTHORIZATION);
 
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
+const commentsModel = new CommentsModel();
 
 const userRankContainer = new UserRankView();
 const footerStatsContainer = new FooterStatsView([]);
@@ -48,7 +49,7 @@ const statsHandlers = {
 };
 
 const filterPresenter = new FilterPresenter(SiteElements.MAIN, filterModel, filmsModel, statsHandlers);
-const movieListPresenter = new MovieList(filterModel, filmsModel);
+const movieListPresenter = new MovieList(filterModel, filmsModel, commentsModel, api);
 
 filterPresenter.init();
 movieListPresenter.init();
@@ -56,5 +57,7 @@ movieListPresenter.init();
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
-    filterPresenter.init();
+  })
+  .catch(() => {
+    filmsModel.setFilms(UpdateType.INIT, []);
   });

@@ -27,10 +27,15 @@ export default class Api {
       .then(Api.toJSON);
   }
 
-  updateFilm() {
+  updateFilm(film) {
     return this._load({
-
-    });
+      url: `movies/${film.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(FilmsModel.adaptToServer(film)),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON)
+      .then(FilmsModel.adaptToClient);
   }
 
   _load({
