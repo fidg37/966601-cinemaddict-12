@@ -1,4 +1,4 @@
-import {IterationCount, SiteElements} from "./constants.js";
+import {IterationCount, SiteElements, UpdateType} from "./constants.js";
 import {render} from "./utils/render.js";
 import {createFilmInfo} from "./mock/film.js";
 import UserRankView from "./view/user-rank.js";
@@ -13,20 +13,21 @@ import Api from "./api.js";
 const AUTHORIZATION = `Basic akfgIIO558#asfmWff9`;
 const EDN_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
-export const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
+// const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
 const api = new Api(EDN_POINT, AUTHORIZATION);
 
-api.getFilms().then((array) => {
-  console.log(array);
-});
-
 const filmsModel = new FilmsModel();
-filmsModel.setFilms(films);
-
 const filterModel = new FilterModel();
 
-render({container: SiteElements.HEADER, child: new UserRankView()});
-render({container: SiteElements.FOOTER, child: new FooterStatsView(films)});
+const userRankContainer = new UserRankView();
+const footerStatsContainer = new FooterStatsView([]);
+
+render({container: SiteElements.HEADER, child: userRankContainer});
+render({container: SiteElements.FOOTER, child: footerStatsContainer});
+
+/* const rankChangeHandler = (watchedFilms) => {
+  userRankContainer.changeRank();
+}; */
 
 const statisticsPresenter = new StatisticsPresenter(SiteElements.MAIN, filmsModel);
 
@@ -47,7 +48,13 @@ const statsHandlers = {
 };
 
 const filterPresenter = new FilterPresenter(SiteElements.MAIN, filterModel, filmsModel, statsHandlers);
-filterPresenter.init();
-
 const movieListPresenter = new MovieList(filterModel, filmsModel);
+
+filterPresenter.init();
 movieListPresenter.init();
+
+api.getFilms()
+  .then((films) => {
+    filmsModel.setFilms(UpdateType.INIT, films);
+    filterPresenter.init();
+  });

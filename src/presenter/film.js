@@ -40,7 +40,7 @@ export default class Film {
     this._cardComponent = new FilmCardView(this._data);
     this._popupComponent = new DetailsPopupView(this._data);
 
-    this._renderComments(this._data);
+    // this._renderComments(this._data);
 
     this._setHandlers();
 

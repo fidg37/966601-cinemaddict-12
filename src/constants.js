@@ -39,7 +39,8 @@ export const ButtonType = {
 
 export const UpdateType = {
   MINOR: `minor`,
-  MAJOR: `major`
+  MAJOR: `major`,
+  INIT: `INIT`
 };
 
 export const FilterType = {

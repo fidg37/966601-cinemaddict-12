@@ -1,6 +1,7 @@
 import ContentFieldView from "../view/content-field.js";
 import ExtraBlockView from "../view/extra-block.js";
 import LoadButtonView from "../view/load-button.js";
+import LoadingView from "../view/loading.js";
 import NoFilmsView from "../view/no-films.js";
 import SortingView from "../view/sorting.js";
 import {SiteElements, SortType, UpdateType} from "../constants.js";
@@ -16,6 +17,9 @@ export default class MovieList {
     this._filmsModel = filmsModel;
     this._renderedFilmCount = MAX_FILMS_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
+    this._isLoading = true;
+
+    this._loadingComponent = new LoadingView();
 
     this._contentFieldComponent = null;
     this._noFilmsComponent = null;
@@ -42,11 +46,15 @@ export default class MovieList {
   }
 
   init() {
-    // this._clearFilmBoard();
     this._renderFilmBoard();
   }
 
   _renderFilmBoard({stats = false} = {}) {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const films = this._getFilms();
     const filmsCount = films.length;
 
@@ -91,6 +99,8 @@ export default class MovieList {
   }
 
   _clearFilmBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
+    remove(this._loadingComponent);
+
     this.destroy();
 
     this._filmPresenters = {
@@ -163,6 +173,11 @@ export default class MovieList {
         this._clearFilmBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderFilmBoard();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderFilmBoard();
+        break;
     }
   }
 
@@ -189,6 +204,10 @@ export default class MovieList {
 
   _clearFilmsList() {
     Object.values(this._filmPresenters.main).forEach((presenter) => presenter.destroy());
+  }
+
+  _renderLoading() {
+    render({container: SiteElements.MAIN, child: this._loadingComponent});
   }
 
   _renderExtraBlock() {
