@@ -11,16 +11,18 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmContainer, changeData, changeMode) {
+  constructor(filmContainer, changeData, commentsModel, api) {
     this._container = filmContainer;
     this._changeData = changeData;
-    this._changeMode = changeMode;
+    this._commentsModel = commentsModel;
+    this._api = api;
 
     this._mode = Mode.DEFAULT;
     this._extraType = null;
     this._cardComponent = null;
     this._popupComponent = null;
     this._popupContainer = SiteElements.MAIN;
+    this._comments = null;
 
     this._presenters = [];
 
@@ -56,7 +58,16 @@ export default class Film {
       return;
     }
 
-    film.comments.forEach((comment) => this._renderComment(comment));
+    this._api.getComments(film.id)
+      .then((comments) => {
+        this._commentsModel.setComments(film.id, comments);
+        this._comments = this._commentsModel.getComments(film.id);
+
+        this._comments.forEach((comment) => this._renderComment(comment));
+      })
+      .catch(() => {
+        // событие ошибки загрузки комментариев
+      });
   }
 
   _renderComment(commentData) {
@@ -155,7 +166,6 @@ export default class Film {
     this._popupComponent.setSubmitCommentHandler(this._handlers.commentChange);
     this._addPopup();
 
-    this._changeMode();
     this._mode = Mode.POPUP;
   }
 }

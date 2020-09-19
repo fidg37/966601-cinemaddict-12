@@ -19,12 +19,12 @@ export default class FilmInfo extends AbstractView {
   }
 
   _createTemplate(film) {
-    const {poster, title, totalRating, release, runtime, genre, description, ageRating, director, writers, actors} = film.filmInfo;
+    const {poster, title, alternativeTitle, totalRating, release, runtime, genre, description, ageRating, director, writers, actors} = film.filmInfo;
     const {date, releaseCountry} = release;
 
     return `<div class="film-details__info-wrap">
       <div class="film-details__poster">
-        <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+        <img class="film-details__poster-img" src="${poster}" alt="">
   
         <p class="film-details__age">${ageRating ? `18+` : ``}</p>
       </div>
@@ -33,7 +33,7 @@ export default class FilmInfo extends AbstractView {
         <div class="film-details__info-head">
           <div class="film-details__title-wrap">
             <h3 class="film-details__title">${title}</h3>
-            <p class="film-details__title-original">Original: ${title}</p>
+            <p class="film-details__title-original">Original: ${alternativeTitle}</p>
           </div>
   
           <div class="film-details__rating">

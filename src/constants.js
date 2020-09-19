@@ -38,8 +38,10 @@ export const ButtonType = {
 };
 
 export const UpdateType = {
+  PATCH: `patch`,
   MINOR: `minor`,
-  MAJOR: `major`
+  MAJOR: `major`,
+  INIT: `INIT`
 };
 
 export const FilterType = {

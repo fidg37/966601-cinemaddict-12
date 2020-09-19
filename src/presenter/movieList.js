@@ -1,9 +1,10 @@
 import ContentFieldView from "../view/content-field.js";
 import ExtraBlockView from "../view/extra-block.js";
 import LoadButtonView from "../view/load-button.js";
+import LoadingView from "../view/loading.js";
 import NoFilmsView from "../view/no-films.js";
 import SortingView from "../view/sorting.js";
-import {SiteElements, SortType, UpdateType} from "../constants.js";
+import {FilterType, SiteElements, SortType, UpdateType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import FilmPresenter from "./film.js";
 import {filter, getSortedFilms, getFilmsSortedByComments} from "../utils/filter.js";
@@ -11,11 +12,16 @@ import {filter, getSortedFilms, getFilmsSortedByComments} from "../utils/filter.
 const MAX_FILMS_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(filterModel, filmsModel) {
+  constructor(filterModel, filmsModel, commentsModel, api) {
     this._filterModel = filterModel;
     this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
+    this._api = api;
     this._renderedFilmCount = MAX_FILMS_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
+    this._isLoading = true;
+
+    this._loadingComponent = new LoadingView();
 
     this._contentFieldComponent = null;
     this._noFilmsComponent = null;
@@ -33,20 +39,24 @@ export default class MovieList {
     this._handlers = {
       sortTypeChange: this._sortTypeChangeHandler.bind(this),
       viewAction: this._viewActionHandler.bind(this),
-      modChange: this._modChangeHandler.bind(this),
       modelEvent: this._modelEventHandler.bind(this)
     };
 
-    this._filmsModel.addObserver(this._handlers.modelEvent);
     this._filterModel.addObserver(this._handlers.modelEvent);
+    this._filmsModel.addObserver(this._handlers.modelEvent);
+    this._commentsModel.addObserver(this._handlers.modelEvent);
   }
 
   init() {
-    // this._clearFilmBoard();
     this._renderFilmBoard();
   }
 
   _renderFilmBoard({stats = false} = {}) {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const films = this._getFilms();
     const filmsCount = films.length;
 
@@ -80,6 +90,7 @@ export default class MovieList {
 
   destroy() {
     remove(this._contentFieldComponent);
+    remove(this._loadingComponent);
     remove(this._noFilmsComponent);
     remove(this._sortingComponent);
     remove(this._buttonComponent);
@@ -91,6 +102,8 @@ export default class MovieList {
   }
 
   _clearFilmBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
+    remove(this._loadingComponent);
+
     this.destroy();
 
     this._filmPresenters = {
@@ -120,18 +133,6 @@ export default class MovieList {
     }
   }
 
-  _modChangeHandler() {
-    const presenters = Object.values(this._filmPresenters.main);
-
-    Object.values(this._filmPresenters.extra).forEach((extra) => (
-      Object.values(extra).forEach((film) => (
-        presenters.push(film)
-      ))
-    ));
-
-    presenters.forEach((presenter) => presenter.resetView());
-  }
-
   _renderContentField() {
     this._filmsList = this._contentFieldComponent.getElement().querySelector(`.films-list__container`);
 
@@ -143,7 +144,7 @@ export default class MovieList {
   }
 
   _renderFilm(film, filmContainer = this._filmsList, extraType = null) {
-    const filmPresenter = new FilmPresenter(filmContainer, this._handlers.viewAction, this._handlers.modChange);
+    const filmPresenter = new FilmPresenter(filmContainer, this._handlers.viewAction, this._commentsModel, this._api);
     filmPresenter.init(film, extraType);
 
     if (filmPresenter.isExtra()) {
@@ -163,12 +164,19 @@ export default class MovieList {
         this._clearFilmBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderFilmBoard();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        this._filterModel.setFilter(UpdateType.MINOR, FilterType.ALL);
+        break;
     }
   }
 
   _viewActionHandler(updateType, film) {
-    this._filmsModel.updateFilm(updateType, film);
-    this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
+    this._api.updateFilm(film)
+      .then((response) => {
+        this._filmsModel.updateFilm(updateType, response);
+        this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
+      });
 
     if (this._filmPresenters.extra.comments[film.id]) {
       this._filmPresenters.extra.comments[film.id].init(film);
@@ -189,6 +197,10 @@ export default class MovieList {
 
   _clearFilmsList() {
     Object.values(this._filmPresenters.main).forEach((presenter) => presenter.destroy());
+  }
+
+  _renderLoading() {
+    render({container: SiteElements.MAIN, child: this._loadingComponent});
   }
 
   _renderExtraBlock() {

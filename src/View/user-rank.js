@@ -13,4 +13,8 @@ export default class UserRank extends AbstractView {
   getTemplate() {
     return this._createTemplate();
   }
+
+  changeRank(newRank) {
+    this.getElement().querySelector(`.profile__rating`).innerHTML = newRank;
+  }
 }
