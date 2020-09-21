@@ -55,3 +55,9 @@ export const MenuType = {
   SORT: `sorting`,
   STATS: `statistics`
 };
+
+export const UserAction = {
+  UPDATE_FILM: `update`,
+  DELETE_COMMENT: `delete`,
+  ADD_COMMENT: `add`
+};

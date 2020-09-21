@@ -1,3 +1,5 @@
+import {UpdateType, FilterType} from "../constants.js";
+
 export const humanizeDate = (date, isFilm = true) => {
   date = new Date(date);
   if (isFilm) {
@@ -20,4 +22,16 @@ export const getRuntime = ({time, onlyHours = false, onlyMinutes = false}) => {
   }
 
   return hours + ` h ` + minutes + ` m`;
+};
+
+export const getUpdateType = ({isCommentsChange, currentFilter, filterType}) => {
+  if (isCommentsChange) {
+    return UpdateType.MINOR;
+  }
+
+  if (currentFilter === FilterType.ALL || currentFilter !== filterType) {
+    return UpdateType.PATCH;
+  } else {
+    return UpdateType.MINOR;
+  }
 };

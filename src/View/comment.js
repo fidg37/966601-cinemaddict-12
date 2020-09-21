@@ -3,10 +3,11 @@ import {humanizeDate} from "../utils/film.js";
 import he from "he";
 
 export default class Comment extends AbstractView {
-  constructor(data) {
+  constructor(data, api) {
     super();
 
     this._data = data;
+    this._api = api;
 
     this._handlers = {
       deleteButtonClick: this._deleteButtonClickHandler.bind(this)
@@ -37,6 +38,8 @@ export default class Comment extends AbstractView {
 
   _deleteButtonClickHandler(evt) {
     evt.preventDefault();
+    // переменная для блокировки формы
+    const commentsForm = this.getElement().parentNode.parentNode;
 
     this._callback.delete(this._data);
   }

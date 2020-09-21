@@ -1,6 +1,6 @@
 import FilmCardView from "../view/film-card.js";
 import DetailsPopupView from "../view/details-popup.js";
-import {SiteElements, UpdateType} from "../constants.js";
+import {SiteElements} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import {replace} from "../utils/common.js";
 import PresenterComment from "../presenter/comment.js";
@@ -11,10 +11,11 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmContainer, changeData, commentsModel, api) {
+  constructor(filmContainer, changeData, commentsModel, filterModel, api) {
     this._container = filmContainer;
     this._changeData = changeData;
     this._commentsModel = commentsModel;
+    this._filterModel = filterModel;
     this._api = api;
 
     this._mode = Mode.DEFAULT;
@@ -33,16 +34,14 @@ export default class Film {
     };
   }
 
-  init(data, extraType) {
-    this._data = data;
+  init({filmData, extraType, isCommentsChange = false}) {
+    this._data = filmData;
     this._extraType = extraType;
 
     this._savePrevComponents();
 
-    this._cardComponent = new FilmCardView(this._data);
-    this._popupComponent = new DetailsPopupView(this._data);
-
-    this._renderComments(this._data);
+    this._cardComponent = new FilmCardView(this._data, this._filterModel.getFilter());
+    this._popupComponent = new DetailsPopupView(this._data, this._filterModel.getFilter(), this._api, isCommentsChange);
 
     this._setHandlers();
 
@@ -58,21 +57,16 @@ export default class Film {
       return;
     }
 
-    this._api.getComments(film.id)
+    this._api.getComments(film)
       .then((comments) => {
-        this._commentsModel.setComments(film.id, comments);
-        this._comments = this._commentsModel.getComments(film.id);
-
+        this._comments = comments;
         this._comments.forEach((comment) => this._renderComment(comment));
-      })
-      .catch(() => {
-        // событие ошибки загрузки комментариев
       });
   }
 
   _renderComment(commentData) {
     const container = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
-    const comment = new PresenterComment(container, commentData, this._data, this._handlers.commentChange);
+    const comment = new PresenterComment(container, commentData, this._data, this._handlers.commentChange, this._api);
 
     this._presenters.push(comment);
 
@@ -82,10 +76,10 @@ export default class Film {
   _commentChangeHandler(newFilmData) {
     this._data = newFilmData;
 
-    this._changeData(UpdateType.MINOR, newFilmData);
+    this._popupComponent.removeClickHandler();
+    this._popupComponent.removeKeydownHandler();
 
-    this.init(newFilmData);
-    this._cardClickHandler();
+    this.init({filmData: newFilmData, isCommentsChange: true});
   }
 
   _setHandlers() {
@@ -107,6 +101,7 @@ export default class Film {
 
     if (this._mode === Mode.POPUP) {
       replace(this._popupComponent, this._prevPopupComponent);
+      this._cardClickHandler();
     }
 
     this._removePrevComponents();
@@ -152,9 +147,9 @@ export default class Film {
     this._mode = Mode.DEFAULT;
   }
 
-  _popupCloseHandler(updateType, film) {
+  _popupCloseHandler(userAction, updateType, film, filterType) {
     this._closePopup();
-    this._changeData(updateType, film);
+    this._changeData(userAction, updateType, film, filterType);
   }
 
   _cardClickHandler() {
@@ -164,6 +159,8 @@ export default class Film {
     this._popupComponent.setEmojiClickHandler();
     this._popupComponent.setNewCommentInputHandler();
     this._popupComponent.setSubmitCommentHandler(this._handlers.commentChange);
+
+    this._renderComments(this._data);
     this._addPopup();
 
     this._mode = Mode.POPUP;
