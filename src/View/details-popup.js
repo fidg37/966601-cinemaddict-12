@@ -32,7 +32,8 @@ export default class DetailsPopup extends AbstractView {
       controllsClick: this._controllsClickHandler.bind(this),
       emojiClick: this._emojiClickHandler.bind(this),
       newCommentInput: this._newCommentInputHandler.bind(this),
-      submitComment: this._submitCommentHandler.bind(this)
+      submitComment: this._submitCommentHandler.bind(this),
+      animationEnd: this._animationEndHandler.bind(this)
     };
   }
 
@@ -166,19 +167,28 @@ export default class DetailsPopup extends AbstractView {
 
       this._api.addComment(this._film.id, this._emptyComment)
         .then(() => {
+          this._newCommentForm.setAttribute(`disabled`, ``);
           this._film.comments.push(this._emptyComment.id);
           this._callback.commentSubmit(this._film);
         })
         .catch(() => {
-          // ошибка отправки комментария
+          this._newCommentForm.classList.add(`shake`);
+          this._newCommentForm.addEventListener(`animationend`, this._handlers.animationEnd);
         });
     }
   }
 
+  _animationEndHandler() {
+    this._newCommentForm.classList.remove(`shake`);
+    this._newCommentForm.removeAttribute(`disabled`);
+    this._newCommentForm.removeEventListener(`animationend`, this._handlers.animationEnd);
+  }
+
   setSubmitCommentHandler(callback) {
     this._callback.commentSubmit = callback;
+    this._newCommentForm = this.getElement().querySelector(`.film-details__comment-input`);
 
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._handlers.submitComment);
+    this._newCommentForm.addEventListener(`keydown`, this._handlers.submitComment);
   }
 
   setNewCommentInputHandler() {
