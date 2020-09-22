@@ -3,13 +3,15 @@ import {humanizeDate} from "../utils/film.js";
 import he from "he";
 
 export default class Comment extends AbstractView {
-  constructor(data) {
+  constructor(data, api) {
     super();
 
     this._data = data;
+    this._api = api;
 
     this._handlers = {
-      deleteButtonClick: this._deleteButtonClickHandler.bind(this)
+      deleteButtonClick: this._deleteButtonClickHandler.bind(this),
+      animationEnd: this._animationEndHandler.bind(this)
     };
   }
 
@@ -35,6 +37,23 @@ export default class Comment extends AbstractView {
     return this._createTemplate(this._data);
   }
 
+  lockComment() {
+    this._deleteButton.setAttribute(`disabled`, ``);
+    this._deleteButton.innerHTML = `Deleting`;
+  }
+
+  _animationEndHandler() {
+    this.getElement().classList.remove(`shake`);
+    this._deleteButton.removeAttribute(`disabled`);
+    this._deleteButton.innerHTML = `Delete`;
+    this.getElement().removeEventListener(`animationend`, this._handlers.animationEnd);
+  }
+
+  unlockComment() {
+    this.getElement().classList.add(`shake`);
+    this.getElement().addEventListener(`animationend`, this._handlers.animationEnd);
+  }
+
   _deleteButtonClickHandler(evt) {
     evt.preventDefault();
 
@@ -44,6 +63,8 @@ export default class Comment extends AbstractView {
   setDeleteButtonClickHandler(callback) {
     this._callback.delete = callback;
 
-    this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._handlers.deleteButtonClick);
+    this._deleteButton = this.getElement().querySelector(`.film-details__comment-delete`);
+
+    this._deleteButton.addEventListener(`click`, this._handlers.deleteButtonClick);
   }
 }

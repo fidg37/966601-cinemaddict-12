@@ -1,14 +1,16 @@
 import AbstractView from "./abstract.js";
 import {getRuntime} from "../utils/film.js";
-import {ButtonType, UpdateType} from "../constants.js";
+import {ButtonType, FilterType, UserAction} from "../constants.js";
+import {getUpdateType} from "../utils/film.js";
 
 const MAX_DESCRIPTION_LENGTH = 138;
 
 export default class FilmCard extends AbstractView {
-  constructor(film) {
+  constructor(film, currentFilter) {
     super();
 
     this._film = film;
+    this._currentFilter = currentFilter;
 
     this._handlers = {
       click: this._clickHandler.bind(this),
@@ -71,17 +73,22 @@ export default class FilmCard extends AbstractView {
       switch (evt.target.dataset.type) {
         case ButtonType.WATCHLIST:
           this._film.userDetails.watchlist = !this._film.userDetails.watchlist;
+          this._filterType = FilterType.WATCHLIST;
           break;
         case ButtonType.WATCHED:
           this._film.userDetails.alreadyWatched = !this._film.userDetails.alreadyWatched;
           this._film.userDetails.watchingDate = new Date();
+          this._filterType = FilterType.HISTORY;
           break;
         case ButtonType.FAVORITE:
           this._film.userDetails.favorite = !this._film.userDetails.favorite;
+          this._filterType = FilterType.FAVORITES;
           break;
       }
 
-      this._callback.buttonClick(UpdateType.MINOR, this._film);
+      const updateType = getUpdateType({currentFilter: this._currentFilter, filterType: this._filterType});
+
+      this._callback.buttonClick(UserAction.UPDATE_FILM, updateType, this._film);
     }
   }
 

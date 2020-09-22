@@ -1,17 +1,22 @@
 import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
-import {Keycodes, ButtonType, UpdateType} from "../constants.js";
+import {Keycodes, ButtonType, UpdateType, UserAction, FilterType} from "../constants.js";
+import {getUpdateType} from "../utils/film.js";
 import uniqueId from "lodash.uniqueid";
 
 const IMG_SIZE = 50;
 
 export default class DetailsPopup extends AbstractView {
-  constructor(film) {
+  constructor(film, currentFulter, api, isCommentsChange) {
     super();
 
     this._film = film;
+    this._currentFilter = currentFulter;
+    this._api = api;
+    this._isCommentsChange = isCommentsChange;
     this._prevInput = null;
+    this._updateType = UpdateType.MINOR;
 
     this._emptyComment = {
       id: uniqueId(),
@@ -27,7 +32,8 @@ export default class DetailsPopup extends AbstractView {
       controllsClick: this._controllsClickHandler.bind(this),
       emojiClick: this._emojiClickHandler.bind(this),
       newCommentInput: this._newCommentInputHandler.bind(this),
-      submitComment: this._submitCommentHandler.bind(this)
+      submitComment: this._submitCommentHandler.bind(this),
+      animationEnd: this._animationEndHandler.bind(this)
     };
   }
 
@@ -93,14 +99,17 @@ export default class DetailsPopup extends AbstractView {
   _clickHandler(evt) {
     evt.preventDefault();
 
-    this._callback.click(UpdateType.MINOR, this._film);
+    const updateType = getUpdateType({isCommentsChange: this._isCommentsChange, currentFilter: this._currentFilter, filterType: this._filterType});
+
+    this._callback.click(UserAction.UPDATE_FILM, updateType, this._film);
   }
 
   _keydownHandler(evt) {
     if (evt.keyCode === Keycodes.ESC) {
       evt.preventDefault();
 
-      this._callback.keydown(UpdateType.MINOR, this._film);
+      const updateType = getUpdateType({isCommentsChange: this._isCommentsChange, currentFilter: this._currentFilter, filterType: this._filterType});
+      this._callback.keydown(UserAction.UPDATE_FILM, updateType, this._film);
     }
   }
 
@@ -109,13 +118,16 @@ export default class DetailsPopup extends AbstractView {
       switch (evt.target.name) {
         case ButtonType.WATCHLIST:
           this._film.userDetails.watchlist = !this._film.userDetails.watchlist;
+          this._filterType = FilterType.WATCHLIST;
           break;
         case ButtonType.WATCHED:
           this._film.userDetails.alreadyWatched = !this._film.userDetails.alreadyWatched;
           this._film.userDetails.watchingDate = new Date();
+          this._filterType = FilterType.HISTORY;
           break;
         case ButtonType.FAVORITE:
           this._film.userDetails.favorite = !this._film.userDetails.favorite;
+          this._filterType = FilterType.FAVORITES;
           break;
       }
     }
@@ -153,16 +165,30 @@ export default class DetailsPopup extends AbstractView {
 
       this._emptyComment.date = new Date();
 
-      this._film.comments.push(this._emptyComment);
-
-      this._callback.commentSubmit(this._film);
+      this._api.addComment(this._film.id, this._emptyComment)
+        .then(() => {
+          this._newCommentForm.setAttribute(`disabled`, ``);
+          this._film.comments.push(this._emptyComment.id);
+          this._callback.commentSubmit(this._film);
+        })
+        .catch(() => {
+          this._newCommentForm.classList.add(`shake`);
+          this._newCommentForm.addEventListener(`animationend`, this._handlers.animationEnd);
+        });
     }
+  }
+
+  _animationEndHandler() {
+    this._newCommentForm.classList.remove(`shake`);
+    this._newCommentForm.removeAttribute(`disabled`);
+    this._newCommentForm.removeEventListener(`animationend`, this._handlers.animationEnd);
   }
 
   setSubmitCommentHandler(callback) {
     this._callback.commentSubmit = callback;
+    this._newCommentForm = this.getElement().querySelector(`.film-details__comment-input`);
 
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._handlers.submitComment);
+    this._newCommentForm.addEventListener(`keydown`, this._handlers.submitComment);
   }
 
   setNewCommentInputHandler() {

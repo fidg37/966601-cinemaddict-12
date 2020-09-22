@@ -4,7 +4,7 @@ import LoadButtonView from "../view/load-button.js";
 import LoadingView from "../view/loading.js";
 import NoFilmsView from "../view/no-films.js";
 import SortingView from "../view/sorting.js";
-import {FilterType, SiteElements, SortType, UpdateType} from "../constants.js";
+import {FilterType, SiteElements, SortType, UpdateType, UserAction} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import FilmPresenter from "./film.js";
 import {filter, getSortedFilms, getFilmsSortedByComments} from "../utils/filter.js";
@@ -144,8 +144,8 @@ export default class MovieList {
   }
 
   _renderFilm(film, filmContainer = this._filmsList, extraType = null) {
-    const filmPresenter = new FilmPresenter(filmContainer, this._handlers.viewAction, this._commentsModel, this._api);
-    filmPresenter.init(film, extraType);
+    const filmPresenter = new FilmPresenter(filmContainer, this._handlers.viewAction, this._commentsModel, this._filterModel, this._api);
+    filmPresenter.init({filmData: film, extraType});
 
     if (filmPresenter.isExtra()) {
       this._filmPresenters.extra[filmPresenter.isExtra()][film.id] = filmPresenter;
@@ -154,7 +154,7 @@ export default class MovieList {
     }
   }
 
-  _modelEventHandler(updateType) {
+  _modelEventHandler(updateType, film) {
     switch (updateType) {
       case UpdateType.MINOR:
         this._clearFilmBoard();
@@ -168,26 +168,37 @@ export default class MovieList {
         this._isLoading = false;
         this._filterModel.setFilter(UpdateType.MINOR, FilterType.ALL);
         break;
+      case UpdateType.PATCH:
+        if (this._filmPresenters.extra.comments[film.id]) {
+          this._filmPresenters.extra.comments[film.id].init({filmData: film});
+        }
+
+        if (this._filmPresenters.extra.rating[film.id]) {
+          this._filmPresenters.extra.rating[film.id].init({filmData: film});
+        }
+
+        if (this._filmPresenters.main[film.id]) {
+          this._filmPresenters.main[film.id].init({filmData: film});
+        }
+        break;
     }
   }
 
-  _viewActionHandler(updateType, film) {
-    this._api.updateFilm(film)
-      .then((response) => {
-        this._filmsModel.updateFilm(updateType, response);
-        this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
-      });
-
-    if (this._filmPresenters.extra.comments[film.id]) {
-      this._filmPresenters.extra.comments[film.id].init(film);
-    }
-
-    if (this._filmPresenters.extra.rating[film.id]) {
-      this._filmPresenters.extra.rating[film.id].init(film);
-    }
-
-    if (this._filmPresenters.main[film.id]) {
-      this._filmPresenters.main[film.id].init(film);
+  _viewActionHandler(actionType, updateType, film) {
+    switch (actionType) {
+      case UserAction.UPDATE_FILM:
+        this._api.updateFilm(film)
+        .then((response) => {
+          this._filmsModel.updateFilm(updateType, response);
+          this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
+        });
+        break;
+      case UserAction.DELETE_COMMENT:
+        // some code
+        break;
+      case UserAction.ADD_COMMENT:
+        // some code
+        break;
     }
   }
 

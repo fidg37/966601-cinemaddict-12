@@ -1,15 +1,16 @@
 import Abstract from "../view/abstract.js";
 import CommentView from "../view/comment.js";
-import {remove, render} from "../utils/render.js";
+import {render} from "../utils/render.js";
 
 export default class Comment extends Abstract {
-  constructor(commentContainer, commentData, filmData, changeData) {
+  constructor(commentContainer, commentData, filmData, changeData, api) {
     super();
 
     this._commentData = commentData;
     this._commentContainer = commentContainer;
     this._filmData = filmData;
     this._changeData = changeData;
+    this._api = api;
     this._commentComponent = null;
 
     this._handlers = {
@@ -18,7 +19,7 @@ export default class Comment extends Abstract {
   }
 
   init() {
-    this._commentComponent = new CommentView(this._commentData);
+    this._commentComponent = new CommentView(this._commentData, this._api);
 
     this._commentComponent.setDeleteButtonClickHandler(this._handlers.delete);
 
@@ -26,11 +27,14 @@ export default class Comment extends Abstract {
   }
 
   destroy(commentData) {
-    this._filmData.comments = this._filmData.comments.filter((comment) => comment !== commentData);
-
-    remove(this._commentComponent);
-    this._commentComponent = null;
-
-    this._changeData(this._filmData);
+    this._api.deleteComment(commentData.id)
+      .then(() => {
+        this._commentComponent.lockComment();
+        this._filmData.comments = this._filmData.comments.filter((comment) => comment !== commentData.id);
+        this._changeData(this._filmData);
+      })
+      .catch(() => {
+        this._commentComponent.unlockComment();
+      });
   }
 }
