@@ -8,7 +8,7 @@ import FilterModel from "./model/filter.js";
 import CommentsModel from "./model/comments.js";
 import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
-import Api from "./api.js";
+import Api from "./api/index.js";
 
 const AUTHORIZATION = `Basic akfgIIO558#asfmWff9`;
 const EDN_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
@@ -61,3 +61,13 @@ api.getFilms()
   .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      console.log(`ServiceWorker available`);
+    })
+    .catch(() => {
+      console.error(`ServiceWorker isn't available`);
+    });
+});
