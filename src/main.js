@@ -68,22 +68,13 @@ apiWithProvider.getFilms()
     filmsModel.setFilms(UpdateType.INIT, []);
   });
 
-/* window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      console.log(`ServiceWorker available`);
-    })
-    .catch(() => {
-      console.error(`ServiceWorker isn't available`);
-    });
-}); */
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
-  apiWithProvider.syncFilms()
-    .then(() => {
-      // apiWithProvider.syncComments();
-    });
+  apiWithProvider.syncFilms();
 });
 
 window.addEventListener(`offline`, () => {
