@@ -147,9 +147,9 @@ export default class Film {
     this._mode = Mode.DEFAULT;
   }
 
-  _popupCloseHandler(userAction, updateType, film, filterType) {
+  _popupCloseHandler(updateType, film) {
     this._closePopup();
-    this._changeData(userAction, updateType, film, filterType);
+    this._changeData(updateType, film);
   }
 
   _cardClickHandler() {

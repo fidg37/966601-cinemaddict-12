@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 import {getRuntime} from "../utils/film.js";
-import {ButtonType, FilterType, UserAction} from "../constants.js";
+import {ButtonType, FilterType} from "../constants.js";
 import {getUpdateType} from "../utils/film.js";
 
 const MAX_DESCRIPTION_LENGTH = 138;
@@ -88,7 +88,7 @@ export default class FilmCard extends AbstractView {
 
       const updateType = getUpdateType({currentFilter: this._currentFilter, filterType: this._filterType});
 
-      this._callback.buttonClick(UserAction.UPDATE_FILM, updateType, this._film);
+      this._callback.buttonClick(updateType, this._film);
     }
   }
 
