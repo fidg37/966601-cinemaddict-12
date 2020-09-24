@@ -27,7 +27,7 @@ export default class Comment extends Abstract {
   }
 
   destroy(commentData) {
-    this._api.deleteComment(commentData.id)
+    this._api.deleteComment(commentData.id, this._filmData.id)
       .then(() => {
         this._commentComponent.lockComment();
         this._filmData.comments = this._filmData.comments.filter((comment) => comment !== commentData.id);

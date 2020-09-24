@@ -73,6 +73,26 @@ export default class Api {
       .catch(Api.catchError);
   }
 
+  syncFilms(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
+  }
+
+  syncComments(data) {
+    return this._load({
+      url: `comments/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
+  }
+
   static checkStatus(response) {
     if (
       response.status < SuccsessHTTPStatusRange.MIN &&

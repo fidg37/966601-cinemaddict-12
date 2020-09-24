@@ -1,9 +1,9 @@
 import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
-import {Keycodes, ButtonType, UpdateType, UserAction, FilterType} from "../constants.js";
+import {Keycodes, ButtonType, UpdateType, FilterType} from "../constants.js";
 import {getUpdateType} from "../utils/film.js";
-import uniqueId from "lodash.uniqueid";
+import {nanoid} from "nanoid";
 
 const IMG_SIZE = 50;
 
@@ -19,7 +19,7 @@ export default class DetailsPopup extends AbstractView {
     this._updateType = UpdateType.MINOR;
 
     this._emptyComment = {
-      id: uniqueId(),
+      id: nanoid(),
       comment: null,
       emotion: null,
       author: `John Doe`,
@@ -101,7 +101,7 @@ export default class DetailsPopup extends AbstractView {
 
     const updateType = getUpdateType({isCommentsChange: this._isCommentsChange, currentFilter: this._currentFilter, filterType: this._filterType});
 
-    this._callback.click(UserAction.UPDATE_FILM, updateType, this._film);
+    this._callback.click(updateType, this._film);
   }
 
   _keydownHandler(evt) {
@@ -109,7 +109,7 @@ export default class DetailsPopup extends AbstractView {
       evt.preventDefault();
 
       const updateType = getUpdateType({isCommentsChange: this._isCommentsChange, currentFilter: this._currentFilter, filterType: this._filterType});
-      this._callback.keydown(UserAction.UPDATE_FILM, updateType, this._film);
+      this._callback.keydown(updateType, this._film);
     }
   }
 

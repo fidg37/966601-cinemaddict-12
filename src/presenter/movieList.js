@@ -4,7 +4,7 @@ import LoadButtonView from "../view/load-button.js";
 import LoadingView from "../view/loading.js";
 import NoFilmsView from "../view/no-films.js";
 import SortingView from "../view/sorting.js";
-import {FilterType, SiteElements, SortType, UpdateType, UserAction} from "../constants.js";
+import {FilterType, SiteElements, SortType, UpdateType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import FilmPresenter from "./film.js";
 import {filter, getSortedFilms, getFilmsSortedByComments} from "../utils/filter.js";
@@ -184,22 +184,12 @@ export default class MovieList {
     }
   }
 
-  _viewActionHandler(actionType, updateType, film) {
-    switch (actionType) {
-      case UserAction.UPDATE_FILM:
-        this._api.updateFilm(film)
+  _viewActionHandler(updateType, film) {
+    this._api.updateFilm(film)
         .then((response) => {
           this._filmsModel.updateFilm(updateType, response);
           this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
         });
-        break;
-      case UserAction.DELETE_COMMENT:
-        // some code
-        break;
-      case UserAction.ADD_COMMENT:
-        // some code
-        break;
-    }
   }
 
   _renderFilms(films) {

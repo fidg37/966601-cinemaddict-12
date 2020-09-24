@@ -9,12 +9,18 @@ import CommentsModel from "./model/comments.js";
 import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
 import Api from "./api/index.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
 const AUTHORIZATION = `Basic akfgIIO558#asfmWff9`;
 const EDN_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VER = `v12`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
-// const films = new Array(IterationCount.CARD).fill().map(createFilmInfo);
 const api = new Api(EDN_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
@@ -49,12 +55,12 @@ const statsHandlers = {
 };
 
 const filterPresenter = new FilterPresenter(SiteElements.MAIN, filterModel, filmsModel, statsHandlers);
-const movieListPresenter = new MovieList(filterModel, filmsModel, commentsModel, api);
+const movieListPresenter = new MovieList(filterModel, filmsModel, commentsModel, apiWithProvider);
 
 filterPresenter.init();
 movieListPresenter.init();
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
   })
@@ -62,7 +68,7 @@ api.getFilms()
     filmsModel.setFilms(UpdateType.INIT, []);
   });
 
-window.addEventListener(`load`, () => {
+/* window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
     .then(() => {
       console.log(`ServiceWorker available`);
@@ -70,4 +76,16 @@ window.addEventListener(`load`, () => {
     .catch(() => {
       console.error(`ServiceWorker isn't available`);
     });
+}); */
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.syncFilms()
+    .then(() => {
+      // apiWithProvider.syncComments();
+    });
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
 });
