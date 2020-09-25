@@ -16,4 +16,8 @@ export default class FooterStats extends AbstractView {
   getTemplate() {
     return this._createTemplate(this._films);
   }
+
+  setFilmsCount(filmsCount) {
+    this.getElement().querySelector(`p`).innerHTML = `${filmsCount} movies inside`;
+  }
 }

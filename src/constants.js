@@ -55,3 +55,19 @@ export const MenuType = {
   SORT: `sorting`,
   STATS: `statistics`
 };
+
+export const UserRank = {
+  NONE: {
+    name: ``,
+    count: 0
+  },
+  NOVICE: {
+    name: `Novice`,
+    count: 10
+  },
+  FAN: {
+    name: `Fan`,
+    count: 20
+  },
+  MOVIE_BUFF: `Movie Buff`
+};

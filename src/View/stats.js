@@ -5,11 +5,12 @@ import {getGenres, getCountWatchedFilmsByGenre, getTopGenre, renderColorsChart, 
 const BAR_HEIGHT = 50;
 
 export default class Stats extends AbstractView {
-  constructor(films, currentFilter) {
+  constructor(films, currentFilter, currentRank) {
     super();
 
     this._films = films;
     this._currentFilter = currentFilter;
+    this._currentRank = currentRank;
 
     this._genres = getGenres(this._films);
     this._counts = getCountWatchedFilmsByGenre(this._films, this._genres);
@@ -27,7 +28,7 @@ export default class Stats extends AbstractView {
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">Sci-Fighter</span>
+      <span class="statistic__rank-label">${this._currentRank}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -60,7 +61,7 @@ export default class Stats extends AbstractView {
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">${this._topGenre ? this._topGenre : `none`}</p>
+        <p class="statistic__item-text">${this._topGenre ? this._topGenre : ``}</p>
       </li>
     </ul>
 
