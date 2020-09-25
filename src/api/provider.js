@@ -66,9 +66,13 @@ export default class Provider {
         });
     }
 
-    const storeComments = Object.values(this._store.getItems()[ContentType.COMMENTS][film.id]);
+    try {
+      const storeComments = Object.values(this._store.getItems()[ContentType.COMMENTS][film.id]);
 
-    return Promise.resolve(storeComments);
+      return Promise.resolve(storeComments);
+    } catch (error) {
+      return Promise.resolve([]);
+    }
   }
 
   updateFilm(film) {

@@ -1,5 +1,6 @@
 import {SiteElements, UpdateType} from "./constants.js";
 import {render} from "./utils/render.js";
+import {getRank} from "./utils/film.js";
 import UserRankView from "./view/user-rank.js";
 import FooterStatsView from "./view/footer-stats.js";
 import MovieList from "./presenter/movieList.js";
@@ -26,15 +27,15 @@ const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
 const commentsModel = new CommentsModel();
 
-const userRankContainer = new UserRankView();
-const footerStatsContainer = new FooterStatsView([]);
+const userRankComponent = new UserRankView();
+const footerStatsComponent = new FooterStatsView([]);
 
-render({container: SiteElements.HEADER, child: userRankContainer});
-render({container: SiteElements.FOOTER, child: footerStatsContainer});
+render({container: SiteElements.HEADER, child: userRankComponent});
+render({container: SiteElements.FOOTER, child: footerStatsComponent});
 
-/* const rankChangeHandler = (watchedFilms) => {
-  userRankContainer.changeRank();
-}; */
+const rankChangeHandler = (filmsCount) => {
+  userRankComponent.changeRank(getRank(filmsCount));
+};
 
 const statisticsPresenter = new StatisticsPresenter(SiteElements.MAIN, filmsModel);
 
@@ -55,7 +56,7 @@ const statsHandlers = {
 };
 
 const filterPresenter = new FilterPresenter(SiteElements.MAIN, filterModel, filmsModel, statsHandlers);
-const movieListPresenter = new MovieList(filterModel, filmsModel, commentsModel, apiWithProvider);
+const movieListPresenter = new MovieList(filterModel, filmsModel, commentsModel, apiWithProvider, rankChangeHandler);
 
 filterPresenter.init();
 movieListPresenter.init();
@@ -63,6 +64,7 @@ movieListPresenter.init();
 apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
+    footerStatsComponent.setFilmsCount(films.length);
   })
   .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);

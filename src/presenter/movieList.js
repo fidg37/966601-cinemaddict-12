@@ -12,11 +12,12 @@ import {filter, getSortedFilms, getFilmsSortedByComments} from "../utils/filter.
 const MAX_FILMS_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(filterModel, filmsModel, commentsModel, api) {
+  constructor(filterModel, filmsModel, commentsModel, api, rankChangeHandler) {
     this._filterModel = filterModel;
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
     this._api = api;
+    this._changeRank = rankChangeHandler;
     this._renderedFilmCount = MAX_FILMS_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
     this._isLoading = true;
@@ -182,6 +183,8 @@ export default class MovieList {
         }
         break;
     }
+
+    this._changeRank(filter[FilterType.HISTORY](this._filmsModel.getFilms()).length);
   }
 
   _viewActionHandler(updateType, film) {
@@ -206,11 +209,15 @@ export default class MovieList {
 
   _renderExtraBlock() {
     const extra = {
-      rating: getSortedFilms([...this._filmsModel.getFilms()], SortType.BY_RATING).slice(0, 2),
-      comments: getFilmsSortedByComments([...this._filmsModel.getFilms()]).slice(0, 2)
+      rating: getSortedFilms([...this._filmsModel.getFilms()], SortType.BY_RATING).slice(0, 2).filter((film) => film.filmInfo.totalRating !== 0),
+      comments: getFilmsSortedByComments([...this._filmsModel.getFilms()]).slice(0, 2).filter((film) => film.comments.length !== 0)
     };
 
     Object.entries(extra).map(([extraType, films]) => {
+      if (films.length === 0) {
+        return;
+      }
+
       const extraBlockComponent = new ExtraBlockView(extraType);
       const extraBlockFilms = extraBlockComponent.getElement().querySelector(`.films-list__container`);
 

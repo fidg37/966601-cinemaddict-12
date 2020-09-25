@@ -4,6 +4,7 @@ import {SiteElements} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import {replace} from "../utils/common.js";
 import PresenterComment from "../presenter/comment.js";
+import ErrorCommentsLoading from "../view/errorCommentsLoading.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -59,9 +60,21 @@ export default class Film {
 
     this._api.getComments(film)
       .then((comments) => {
+        if (comments.length !== film.comments.length) {
+          this._renderErrorMessage();
+          return;
+        }
+
         this._comments = comments;
         this._comments.forEach((comment) => this._renderComment(comment));
+      })
+      .catch(() => {
+        this._renderErrorMessage();
       });
+  }
+
+  _renderErrorMessage() {
+    render({container: this._popupComponent.getElement().querySelector(`.film-details__comments-list`), child: new ErrorCommentsLoading()});
   }
 
   _renderComment(commentData) {

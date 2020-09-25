@@ -1,11 +1,20 @@
-import {UpdateType, FilterType} from "../constants.js";
+import {UpdateType, FilterType, UserRank} from "../constants.js";
+import moment from "moment";
 
 export const humanizeDate = (date, isFilm = true) => {
   date = new Date(date);
   if (isFilm) {
-    return date.toLocaleDateString(`en`, {day: `numeric`, year: `numeric`, month: `long`});
+    return moment(date).format(`DD MMMM YYYY`);
   }
-  return date.toLocaleDateString(`en`, {day: `numeric`, year: `numeric`, month: `long`, hour: `2-digit`, minute: `2-digit`});
+
+  const dateFrom = moment().add(-1, `m`);
+  const dateTo = moment().add(5, `m`);
+
+  if (moment(date).isBetween(dateFrom, dateTo)) {
+    return `a few minutes ago`;
+  }
+
+  return moment(date).format(`YYYY/MM/DD HH:mm`);
 };
 
 export const getRuntime = ({time, onlyHours = false, onlyMinutes = false}) => {
@@ -34,4 +43,20 @@ export const getUpdateType = ({isCommentsChange, currentFilter, filterType}) => 
   } else {
     return UpdateType.MINOR;
   }
+};
+
+export const getRank = (watchedFilmsCount) => {
+  if (watchedFilmsCount === UserRank.NONE.count) {
+    return UserRank.NONE.name;
+  }
+
+  if (watchedFilmsCount > UserRank.NONE.count && watchedFilmsCount <= UserRank.NOVICE.count) {
+    return UserRank.NOVICE.name;
+  }
+
+  if (watchedFilmsCount > UserRank.NOVICE.count && watchedFilmsCount <= UserRank.FAN.count) {
+    return UserRank.FAN.name;
+  }
+
+  return UserRank.MOVIE_BUFF.name;
 };
