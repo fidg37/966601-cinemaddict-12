@@ -51,11 +51,6 @@ export const FilterType = {
   FAVORITES: `favorites`
 };
 
-export const MenuType = {
-  SORT: `sorting`,
-  STATS: `statistics`
-};
-
 export const UserRank = {
   NONE: {
     name: ``,
@@ -69,5 +64,15 @@ export const UserRank = {
     name: `Fan`,
     count: 20
   },
-  MOVIE_BUFF: `Movie Buff`
+  MOVIE_BUFF: {
+    name: `Movie Buff`
+  }
+};
+
+export const StatsFilterType = {
+  ALL: `all`,
+  TODAY: `day`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
 };

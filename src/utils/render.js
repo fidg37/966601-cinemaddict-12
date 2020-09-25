@@ -1,5 +1,5 @@
 import Abstract from "../view/abstract.js";
-import {IterationCount, InsertPlace} from "../constants.js";
+import {InsertPlace} from "../constants.js";
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -21,17 +21,6 @@ export const render = ({container, child, place = InsertPlace.BEFOREEND}) => {
     container.prepend(child);
   } else {
     container.append(child);
-  }
-};
-
-export const renderTemplate = ({
-  container,
-  template,
-  place = InsertPlace.BEFOREEND,
-  iteration = IterationCount.DEFAULT
-}) => {
-  for (let i = 0; i < iteration; i++) {
-    container.insertAdjacentHTML(place, template);
   }
 };
 

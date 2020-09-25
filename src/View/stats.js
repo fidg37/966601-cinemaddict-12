@@ -1,6 +1,7 @@
 import AbstractView from "./abstract.js";
 import {getRuntime} from "../utils/film.js";
-import {getGenres, getCountWatchedFilmsByGenre, getTopGenre, renderColorsChart, StatsFilterType, getTotalRuntime} from "../utils/statistics.js";
+import {StatsFilterType} from "../constants.js";
+import {getGenres, getCountWatchedFilmsByGenre, getTopGenre, renderColorsChart, getTotalRuntime} from "../utils/statistics.js";
 
 const BAR_HEIGHT = 50;
 

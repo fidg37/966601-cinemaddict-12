@@ -12,10 +12,9 @@ import {filter, getSortedFilms, getFilmsSortedByComments} from "../utils/filter.
 const MAX_FILMS_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(filterModel, filmsModel, commentsModel, api, rankChangeHandler) {
+  constructor(filterModel, filmsModel, api, rankChangeHandler) {
     this._filterModel = filterModel;
     this._filmsModel = filmsModel;
-    this._commentsModel = commentsModel;
     this._api = api;
     this._changeRank = rankChangeHandler;
     this._renderedFilmCount = MAX_FILMS_PER_STEP;
@@ -45,7 +44,6 @@ export default class MovieList {
 
     this._filterModel.addObserver(this._handlers.modelEvent);
     this._filmsModel.addObserver(this._handlers.modelEvent);
-    this._commentsModel.addObserver(this._handlers.modelEvent);
   }
 
   init() {
@@ -129,9 +127,9 @@ export default class MovieList {
 
     if (this._currentSortType === SortType.DEFAULT) {
       return filteredFilms;
-    } else {
-      return getSortedFilms(filteredFilms, this._currentSortType);
     }
+
+    return getSortedFilms(filteredFilms, this._currentSortType);
   }
 
   _renderContentField() {
@@ -145,7 +143,7 @@ export default class MovieList {
   }
 
   _renderFilm(film, filmContainer = this._filmsList, extraType = null) {
-    const filmPresenter = new FilmPresenter(filmContainer, this._handlers.viewAction, this._commentsModel, this._filterModel, this._api);
+    const filmPresenter = new FilmPresenter(filmContainer, this._handlers.viewAction, this._filterModel, this._api);
     filmPresenter.init({filmData: film, extraType});
 
     if (filmPresenter.isExtra()) {
@@ -197,10 +195,6 @@ export default class MovieList {
 
   _renderFilms(films) {
     films.forEach((film) => this._renderFilm(film));
-  }
-
-  _clearFilmsList() {
-    Object.values(this._filmPresenters.main).forEach((presenter) => presenter.destroy());
   }
 
   _renderLoading() {

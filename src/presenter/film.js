@@ -4,7 +4,7 @@ import {SiteElements} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import {replace} from "../utils/common.js";
 import PresenterComment from "../presenter/comment.js";
-import ErrorCommentsLoading from "../view/errorCommentsLoading.js";
+import ErrorCommentsLoading from "../view/error-comments-loading.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -12,10 +12,9 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmContainer, changeData, commentsModel, filterModel, api) {
+  constructor(filmContainer, changeData, filterModel, api) {
     this._container = filmContainer;
     this._changeData = changeData;
-    this._commentsModel = commentsModel;
     this._filterModel = filterModel;
     this._api = api;
 
@@ -60,7 +59,7 @@ export default class Film {
 
     this._api.getComments(film)
       .then((comments) => {
-        if (comments.length !== film.comments.length) {
+        if (!comments.length && film.comments.length) {
           this._renderErrorMessage();
           return;
         }
@@ -123,12 +122,6 @@ export default class Film {
   _removePrevComponents() {
     remove(this._prevCardComponent);
     remove(this._prevPopupComponent);
-  }
-
-  resetView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._closePopup();
-    }
   }
 
   isExtra() {

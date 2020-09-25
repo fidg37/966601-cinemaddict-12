@@ -1,6 +1,6 @@
 import FilmsModel from "../model/films.js";
 
-export const ContentType = {
+const ContentType = {
   FILMS: `films`,
   COMMENTS: `comments`
 };
@@ -125,8 +125,6 @@ export default class Provider {
           const updatedFilms = getSyncedItems(response.updated);
 
           const items = createStoreStructure(updatedFilms);
-
-          this._comments = Object.values(this._store.getItems()[ContentType.COMMENTS]);
 
           this._store.setItems(items);
         });

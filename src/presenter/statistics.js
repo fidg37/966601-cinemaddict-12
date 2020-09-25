@@ -1,8 +1,9 @@
 import StatsView from "../view/stats.js";
 import {render, remove} from "../utils/render.js";
 import {replace} from "../utils/common.js";
-import {StatsFilterType, getWatchedFilms, getFilteredFilms} from "../utils/statistics.js";
+import {getWatchedFilms, getFilteredFilms} from "../utils/statistics.js";
 import {getRank} from "../utils/film.js";
+import {StatsFilterType} from "../constants.js";
 
 export default class Statistics {
   constructor(container, filmsModel) {

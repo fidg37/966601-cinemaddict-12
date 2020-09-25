@@ -1,5 +1,3 @@
-// import {contentType} from "../constants.js";
-
 export default class Store {
   constructor(key, storage) {
     this._storeKey = key;
@@ -23,19 +21,11 @@ export default class Store {
       store[contentType][key] = value;
     }
 
-    this._storage.setItem(
-        this._storeKey,
-        JSON.stringify(
-            store
-        )
-    );
+    this._setItemToStorage(store);
   }
 
   setItems(items) {
-    this._storage.setItem(
-        this._storeKey,
-        JSON.stringify(items)
-    );
+    this._setItemToStorage(items);
   }
 
   removeItem(contentType, key, id) {
@@ -43,9 +33,13 @@ export default class Store {
 
     delete store[contentType][key][id];
 
+    this._setItemToStorage(store);
+  }
+
+  _setItemToStorage(item) {
     this._storage.setItem(
         this._storeKey,
-        JSON.stringify(store)
+        JSON.stringify(item)
     );
   }
 }

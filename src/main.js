@@ -6,10 +6,9 @@ import FooterStatsView from "./view/footer-stats.js";
 import MovieList from "./presenter/movieList.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
-import CommentsModel from "./model/comments.js";
 import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
-import Api from "./api/index.js";
+import Api from "./api/app.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
@@ -25,7 +24,6 @@ const apiWithProvider = new Provider(api, store);
 
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
-const commentsModel = new CommentsModel();
 
 const userRankComponent = new UserRankView();
 const footerStatsComponent = new FooterStatsView([]);
@@ -56,7 +54,7 @@ const statsHandlers = {
 };
 
 const filterPresenter = new FilterPresenter(SiteElements.MAIN, filterModel, filmsModel, statsHandlers);
-const movieListPresenter = new MovieList(filterModel, filmsModel, commentsModel, apiWithProvider, rankChangeHandler);
+const movieListPresenter = new MovieList(filterModel, filmsModel, apiWithProvider, rankChangeHandler);
 
 filterPresenter.init();
 movieListPresenter.init();
@@ -71,7 +69,11 @@ apiWithProvider.getFilms()
   });
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`);
+  try {
+    navigator.serviceWorker.register(`/sw.js`);
+  } catch (error) {
+    return;
+  }
 });
 
 window.addEventListener(`online`, () => {

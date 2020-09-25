@@ -4,14 +4,6 @@ import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import moment from "moment";
 
-export const StatsFilterType = {
-  ALL: `all`,
-  TODAY: `day`,
-  WEEK: `week`,
-  MONTH: `month`,
-  YEAR: `year`
-};
-
 export const getFilteredFilms = (films, filterType) => {
   if (filterType === FilterType.ALL) {
     return films;

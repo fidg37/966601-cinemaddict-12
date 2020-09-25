@@ -1,22 +1,21 @@
 import AbstractView from "./abstract.js";
 import FilmInfoView from "./film-info.js";
 import PopupControlView from "./popup-control.js";
-import {Keycodes, ButtonType, UpdateType, FilterType} from "../constants.js";
+import {Keycodes, ButtonType, FilterType} from "../constants.js";
 import {getUpdateType} from "../utils/film.js";
 import {nanoid} from "nanoid";
 
 const IMG_SIZE = 50;
 
 export default class DetailsPopup extends AbstractView {
-  constructor(film, currentFulter, api, isCommentsChange) {
+  constructor(film, currentFilter, api, isCommentsChange) {
     super();
 
     this._film = film;
-    this._currentFilter = currentFulter;
+    this._currentFilter = currentFilter;
     this._api = api;
     this._isCommentsChange = isCommentsChange;
     this._prevInput = null;
-    this._updateType = UpdateType.MINOR;
 
     this._emptyComment = {
       id: nanoid(),
@@ -166,9 +165,11 @@ export default class DetailsPopup extends AbstractView {
       this._emptyComment.date = new Date();
 
       this._api.addComment(this._film.id, this._emptyComment)
-        .then(() => {
+        .then((comment) => {
+          const newId = comment.comments[comment.comments.length - 1].id;
+
           this._newCommentForm.setAttribute(`disabled`, ``);
-          this._film.comments.push(this._emptyComment.id);
+          this._film.comments.push(newId);
           this._callback.commentSubmit(this._film);
         })
         .catch(() => {

@@ -7,7 +7,7 @@ const Method = {
   DELETE: `DELETE`
 };
 
-const SuccsessHTTPStatusRange = {
+const SuccessHTTPStatusRange = {
   MIN: 200,
   MAX: 299
 };
@@ -83,20 +83,10 @@ export default class Api {
       .then(Api.toJSON);
   }
 
-  syncComments(data) {
-    return this._load({
-      url: `comments/sync`,
-      method: Method.POST,
-      body: JSON.stringify(data),
-      headers: new Headers({"Content-Type": `application/json`})
-    })
-      .then(Api.toJSON);
-  }
-
   static checkStatus(response) {
     if (
-      response.status < SuccsessHTTPStatusRange.MIN &&
-      response.status > SuccsessHTTPStatusRange.MAX
+      response.status < SuccessHTTPStatusRange.MIN &&
+      response.status > SuccessHTTPStatusRange.MAX
     ) {
       throw new Error(`${response.status}: ${response.statusText}`);
     }

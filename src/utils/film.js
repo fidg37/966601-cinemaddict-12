@@ -40,9 +40,9 @@ export const getUpdateType = ({isCommentsChange, currentFilter, filterType}) => 
 
   if (currentFilter === FilterType.ALL || currentFilter !== filterType) {
     return UpdateType.PATCH;
-  } else {
-    return UpdateType.MINOR;
   }
+
+  return UpdateType.MINOR;
 };
 
 export const getRank = (watchedFilmsCount) => {
