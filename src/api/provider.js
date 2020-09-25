@@ -130,30 +130,4 @@ export default class Provider {
 
     return Promise.reject(new Error(`Sync data failed`));
   }
-
-  // Не могу понять в каком виде нужно отправлять комментарии для синхронизации,
-  // и надо ли это вообще делать тк в ТЗ есть только /movies/sync
-
-  /* syncComments() {
-    if (Provider.isOnline()) {
-      const storeComments = Object.values(this._comments);
-
-
-      return this._api.syncComments(storeComments)
-        .then((response) => {
-          const updatedComments = getSyncedItems(response.updated);
-          const createdComments = getSyncedItems(response.created);
-
-
-          const items = createStoreStructure(updatedFilms);
-
-          this._comments = Object.values(this._store.getItems()[ContentType.COMMENTS]);
-
-          this._store.setItems(items);
-        });
-    }
-
-    return Promise.reject(new Error(`Sync data failed`));
-  }
-  */
 }
