@@ -69,11 +69,10 @@ apiWithProvider.getFilms()
   });
 
 window.addEventListener(`load`, () => {
-  try {
-    navigator.serviceWorker.register(`/sw.js`);
-  } catch (error) {
-    return;
-  }
+  navigator.serviceWorker.register(`/sw.js`)
+    .catch((err) => {
+      throw new Error(err);
+    });
 });
 
 window.addEventListener(`online`, () => {
