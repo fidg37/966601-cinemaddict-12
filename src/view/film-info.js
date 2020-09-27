@@ -8,6 +8,10 @@ export default class FilmInfo extends AbstractView {
     this._film = film;
   }
 
+  getTemplate() {
+    return this._createTemplate(this._film);
+  }
+
   _createGenreTemplate(genres) {
     return (genres.map((genre) => (
       `<span class="film-details__genre">${genre}</span>`
@@ -78,9 +82,5 @@ export default class FilmInfo extends AbstractView {
         </p>
       </div>
     </div>`;
-  }
-
-  getTemplate() {
-    return this._createTemplate(this._film);
   }
 }

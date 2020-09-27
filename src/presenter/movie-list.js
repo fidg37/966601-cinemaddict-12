@@ -50,6 +50,19 @@ export default class MovieList {
     this._renderFilmBoard();
   }
 
+  destroy() {
+    remove(this._contentFieldComponent);
+    remove(this._loadingComponent);
+    remove(this._noFilmsComponent);
+    remove(this._sortingComponent);
+    remove(this._buttonComponent);
+
+    this._contentFieldComponent = null;
+    this._noFilmsComponent = null;
+    this._sortingComponent = null;
+    this._buttonComponent = null;
+  }
+
   _renderFilmBoard({stats = false} = {}) {
     if (this._isLoading) {
       this._renderLoading();
@@ -85,19 +98,6 @@ export default class MovieList {
     this._noFilmsComponent = new NoFilmsView();
     this._sortingComponent = new SortingView(this._currentSortType);
     this._buttonComponent = new LoadButtonView();
-  }
-
-  destroy() {
-    remove(this._contentFieldComponent);
-    remove(this._loadingComponent);
-    remove(this._noFilmsComponent);
-    remove(this._sortingComponent);
-    remove(this._buttonComponent);
-
-    this._contentFieldComponent = null;
-    this._noFilmsComponent = null;
-    this._sortingComponent = null;
-    this._buttonComponent = null;
   }
 
   _clearFilmBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
@@ -153,46 +153,6 @@ export default class MovieList {
     }
   }
 
-  _modelEventHandler(updateType, film) {
-    switch (updateType) {
-      case UpdateType.MINOR:
-        this._clearFilmBoard();
-        this._renderFilmBoard();
-        break;
-      case UpdateType.MAJOR:
-        this._clearFilmBoard({resetRenderedFilmCount: true, resetSortType: true});
-        this._renderFilmBoard();
-        break;
-      case UpdateType.INIT:
-        this._isLoading = false;
-        this._filterModel.setFilter(UpdateType.MINOR, FilterType.ALL);
-        break;
-      case UpdateType.PATCH:
-        if (this._filmPresenters.extra.comments[film.id]) {
-          this._filmPresenters.extra.comments[film.id].init({filmData: film});
-        }
-
-        if (this._filmPresenters.extra.rating[film.id]) {
-          this._filmPresenters.extra.rating[film.id].init({filmData: film});
-        }
-
-        if (this._filmPresenters.main[film.id]) {
-          this._filmPresenters.main[film.id].init({filmData: film});
-        }
-        break;
-    }
-
-    this._changeRank(filter[FilterType.HISTORY](this._filmsModel.getFilms()).length);
-  }
-
-  _viewActionHandler(updateType, film) {
-    this._api.updateFilm(film)
-        .then((response) => {
-          this._filmsModel.updateFilm(updateType, response);
-          this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
-        });
-  }
-
   _renderFilms(films) {
     films.forEach((film) => this._renderFilm(film));
   }
@@ -218,6 +178,11 @@ export default class MovieList {
       render({container: this._contentFieldComponent.getElement(), child: extraBlockComponent});
       films.forEach((film) => (this._renderFilm(film, extraBlockFilms, extraType)));
     });
+  }
+
+  _renderSorting() {
+    this._sortingComponent.setSortTypeChangeHandler(this._handlers.sortTypeChange);
+    render({container: SiteElements.MAIN, child: this._sortingComponent});
   }
 
   _renderLoadButton(films, filmsCount) {
@@ -258,8 +223,43 @@ export default class MovieList {
     this._renderFilmBoard();
   }
 
-  _renderSorting() {
-    this._sortingComponent.setSortTypeChangeHandler(this._handlers.sortTypeChange);
-    render({container: SiteElements.MAIN, child: this._sortingComponent});
+  _modelEventHandler(updateType, film) {
+    switch (updateType) {
+      case UpdateType.MINOR:
+        this._clearFilmBoard();
+        this._renderFilmBoard();
+        break;
+      case UpdateType.MAJOR:
+        this._clearFilmBoard({resetRenderedFilmCount: true, resetSortType: true});
+        this._renderFilmBoard();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        this._filterModel.setFilter(UpdateType.MINOR, FilterType.ALL);
+        break;
+      case UpdateType.PATCH:
+        if (this._filmPresenters.extra.comments[film.id]) {
+          this._filmPresenters.extra.comments[film.id].init({filmData: film});
+        }
+
+        if (this._filmPresenters.extra.rating[film.id]) {
+          this._filmPresenters.extra.rating[film.id].init({filmData: film});
+        }
+
+        if (this._filmPresenters.main[film.id]) {
+          this._filmPresenters.main[film.id].init({filmData: film});
+        }
+        break;
+    }
+
+    this._changeRank(filter[FilterType.HISTORY](this._filmsModel.getFilms()).length);
+  }
+
+  _viewActionHandler(updateType, film) {
+    this._api.updateFilm(film)
+        .then((response) => {
+          this._filmsModel.updateFilm(updateType, response);
+          this._filterModel.setFilter(UpdateType, this._filterModel.getFilter());
+        });
   }
 }

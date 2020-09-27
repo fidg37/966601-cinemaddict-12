@@ -18,6 +18,26 @@ export default class FilmCard extends AbstractView {
     };
   }
 
+  getTemplate() {
+    return this._createTemplate(this._film);
+  }
+
+  setButtonClickHandler(callback) {
+    this._callback.buttonClick = callback;
+
+    this.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, this._handlers.buttonClick);
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+
+    this.getElement().querySelectorAll(`.film-card__poster, h3, .film-card__comments`)
+      .forEach((element) => {
+        element.addEventListener(`click`, this._handlers.click);
+      })
+    ;
+  }
+
   _getDescription(text) {
     if (text.length < MAX_DESCRIPTION_LENGTH) {
       return text;
@@ -54,10 +74,6 @@ export default class FilmCard extends AbstractView {
     </article>`);
   }
 
-  getTemplate() {
-    return this._createTemplate(this._film);
-  }
-
   _clickHandler(evt) {
     evt.preventDefault();
 
@@ -90,21 +106,5 @@ export default class FilmCard extends AbstractView {
 
       this._callback.buttonClick(updateType, this._film);
     }
-  }
-
-  setButtonClickHandler(callback) {
-    this._callback.buttonClick = callback;
-
-    this.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, this._handlers.buttonClick);
-  }
-
-  setClickHandler(callback) {
-    this._callback.click = callback;
-
-    this.getElement().querySelectorAll(`.film-card__poster, h3, .film-card__comments`)
-      .forEach((element) => {
-        element.addEventListener(`click`, this._handlers.click);
-      })
-    ;
   }
 }

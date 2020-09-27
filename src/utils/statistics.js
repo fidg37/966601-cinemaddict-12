@@ -32,7 +32,7 @@ export const getGenres = (films) => {
   const watchedFilms = getWatchedFilms(films);
   const genres = new Set();
 
-  for (let film of watchedFilms) {
+  for (const film of watchedFilms) {
     genres.add(film.filmInfo.genre[0]);
   }
 

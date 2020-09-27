@@ -1,6 +1,10 @@
 import AbstractView from "./abstract.js";
 
 export default class ContentField extends AbstractView {
+  getTemplate() {
+    return this._createTemplate();
+  }
+
   _createTemplate() {
     return (`<section class="films">
       <section class="films-list">
@@ -8,9 +12,5 @@ export default class ContentField extends AbstractView {
         <div class="films-list__container"></div>
       </section>
     </section>`);
-  }
-
-  getTemplate() {
-    return this._createTemplate();
   }
 }

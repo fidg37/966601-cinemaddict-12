@@ -35,13 +35,12 @@ export default class Statistics {
     this._statsComponent.renderChart();
   }
 
-  _viewActionHandler(filterType) {
-    this.init(filterType);
-  }
-
   destroy() {
     remove(this._statsComponent);
     this._statsComponent = null;
   }
 
+  _viewActionHandler(filterType) {
+    this.init(filterType);
+  }
 }

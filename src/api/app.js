@@ -57,6 +57,16 @@ export default class Api {
       .then(FilmsModel.adaptToClient);
   }
 
+  syncFilms(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
+  }
+
   _load({
     url,
     method = Method.GET,
@@ -71,16 +81,6 @@ export default class Api {
     )
       .then(Api.checkStatus)
       .catch(Api.catchError);
-  }
-
-  syncFilms(data) {
-    return this._load({
-      url: `movies/sync`,
-      method: Method.POST,
-      body: JSON.stringify(data),
-      headers: new Headers({"Content-Type": `application/json`})
-    })
-      .then(Api.toJSON);
   }
 
   static checkStatus(response) {

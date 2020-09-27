@@ -6,18 +6,9 @@ export default class LoadButton extends AbstractView {
 
     this._clickHandler = this._clickHandler.bind(this);
   }
-  _createTemplate() {
-    return (`<button class="films-list__show-more">Show more</button>`);
-  }
 
   getTemplate() {
     return this._createTemplate();
-  }
-
-  _clickHandler(evt) {
-    evt.preventDefault();
-
-    this._callback.click();
   }
 
   setClickHandler(callback) {
@@ -28,5 +19,15 @@ export default class LoadButton extends AbstractView {
 
   removeClickHandler() {
     this.getElement().removeEventListener(`click`, this._clickHandler);
+  }
+
+  _createTemplate() {
+    return (`<button class="films-list__show-more">Show more</button>`);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+
+    this._callback.click();
   }
 }

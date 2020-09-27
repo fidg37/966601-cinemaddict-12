@@ -15,6 +15,28 @@ export default class Comment extends AbstractView {
     };
   }
 
+  getTemplate() {
+    return this._createTemplate(this._data);
+  }
+
+  lockComment() {
+    this._deleteButton.setAttribute(`disabled`, ``);
+    this._deleteButton.innerHTML = `Deleting`;
+  }
+
+  unlockComment() {
+    this.getElement().classList.add(`shake`);
+    this.getElement().addEventListener(`animationend`, this._handlers.animationEnd);
+  }
+
+  setDeleteButtonClickHandler(callback) {
+    this._callback.delete = callback;
+
+    this._deleteButton = this.getElement().querySelector(`.film-details__comment-delete`);
+
+    this._deleteButton.addEventListener(`click`, this._handlers.deleteButtonClick);
+  }
+
   _createTemplate({author, date, comment, emotion}) {
     return (
       `<li class="film-details__comment">
@@ -33,15 +55,6 @@ export default class Comment extends AbstractView {
     );
   }
 
-  getTemplate() {
-    return this._createTemplate(this._data);
-  }
-
-  lockComment() {
-    this._deleteButton.setAttribute(`disabled`, ``);
-    this._deleteButton.innerHTML = `Deleting`;
-  }
-
   _animationEndHandler() {
     this.getElement().classList.remove(`shake`);
     this._deleteButton.removeAttribute(`disabled`);
@@ -49,22 +62,9 @@ export default class Comment extends AbstractView {
     this.getElement().removeEventListener(`animationend`, this._handlers.animationEnd);
   }
 
-  unlockComment() {
-    this.getElement().classList.add(`shake`);
-    this.getElement().addEventListener(`animationend`, this._handlers.animationEnd);
-  }
-
   _deleteButtonClickHandler(evt) {
     evt.preventDefault();
 
     this._callback.delete(this._data);
-  }
-
-  setDeleteButtonClickHandler(callback) {
-    this._callback.delete = callback;
-
-    this._deleteButton = this.getElement().querySelector(`.film-details__comment-delete`);
-
-    this._deleteButton.addEventListener(`click`, this._handlers.deleteButtonClick);
   }
 }

@@ -36,6 +36,51 @@ export default class DetailsPopup extends AbstractView {
     };
   }
 
+  getTemplate() {
+    return this._createTemplate(this._film);
+  }
+
+  setSubmitCommentHandler(callback) {
+    this._callback.commentSubmit = callback;
+    this._newCommentForm = this.getElement().querySelector(`.film-details__comment-input`);
+
+    this._newCommentForm.addEventListener(`keydown`, this._handlers.submitComment);
+  }
+
+  setNewCommentInputHandler() {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._handlers.newCommentInput);
+  }
+
+  setEmojiClickHandler() {
+    this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`click`, this._handlers.emojiClick);
+  }
+
+  setControllsClickHandler(callback) {
+    this._callback.controlClick = callback;
+
+    this.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, this._handlers.controllsClick);
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._handlers.click);
+  }
+
+  setKeydownHandler(callback) {
+    this._callback.keydown = callback;
+
+    document.addEventListener(`keydown`, this._handlers.keydown);
+  }
+
+  removeClickHandler() {
+    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, this._handlers.click);
+  }
+
+  removeKeydownHandler() {
+    document.removeEventListener(`keydown`, this._handlers.keydown);
+  }
+
   _createTemplate(film) {
     return (
       `<section class="film-details">
@@ -89,10 +134,6 @@ export default class DetailsPopup extends AbstractView {
       </form>
     </section>`
     );
-  }
-
-  getTemplate() {
-    return this._createTemplate(this._film);
   }
 
   _clickHandler(evt) {
@@ -183,46 +224,5 @@ export default class DetailsPopup extends AbstractView {
     this._newCommentForm.classList.remove(`shake`);
     this._newCommentForm.removeAttribute(`disabled`);
     this._newCommentForm.removeEventListener(`animationend`, this._handlers.animationEnd);
-  }
-
-  setSubmitCommentHandler(callback) {
-    this._callback.commentSubmit = callback;
-    this._newCommentForm = this.getElement().querySelector(`.film-details__comment-input`);
-
-    this._newCommentForm.addEventListener(`keydown`, this._handlers.submitComment);
-  }
-
-  setNewCommentInputHandler() {
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._handlers.newCommentInput);
-  }
-
-  setEmojiClickHandler() {
-    this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`click`, this._handlers.emojiClick);
-  }
-
-  setControllsClickHandler(callback) {
-    this._callback.controlClick = callback;
-
-    this.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, this._handlers.controllsClick);
-  }
-
-  setClickHandler(callback) {
-    this._callback.click = callback;
-
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._handlers.click);
-  }
-
-  setKeydownHandler(callback) {
-    this._callback.keydown = callback;
-
-    document.addEventListener(`keydown`, this._handlers.keydown);
-  }
-
-  removeClickHandler() {
-    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, this._handlers.click);
-  }
-
-  removeKeydownHandler() {
-    document.removeEventListener(`keydown`, this._handlers.keydown);
   }
 }

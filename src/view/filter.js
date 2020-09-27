@@ -17,6 +17,22 @@ export default class Filter extends AbstractView {
     };
   }
 
+  getTemplate() {
+    return this._createTemplate(this._films);
+  }
+
+  setStatsClickHandler(callback) {
+    this._callback.stats = callback;
+
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._handlers.stastClick);
+  }
+
+  setFilterClickHandler(callback) {
+    this._callback.filterClick = callback;
+
+    this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, this._handlers.filterClick);
+  }
+
   _createItems(films) {
     return Object.keys(filter).map((name) => {
       const filmsCount = filter[name](films).length;
@@ -42,10 +58,6 @@ export default class Filter extends AbstractView {
     </nav>`);
   }
 
-  getTemplate() {
-    return this._createTemplate(this._films);
-  }
-
   _statsClickHandler(evt) {
     evt.preventDefault();
 
@@ -60,12 +72,6 @@ export default class Filter extends AbstractView {
     }
   }
 
-  setStatsClickHandler(callback) {
-    this._callback.stats = callback;
-
-    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._handlers.stastClick);
-  }
-
   _filterClickHandler(evt) {
     if (evt.target.tagName === `A`) {
       evt.preventDefault();
@@ -78,11 +84,5 @@ export default class Filter extends AbstractView {
 
       this._callback.filterClick(evt.target.attributes.value.nodeValue);
     }
-  }
-
-  setFilterClickHandler(callback) {
-    this._callback.filterClick = callback;
-
-    this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, this._handlers.filterClick);
   }
 }

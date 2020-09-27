@@ -36,10 +36,6 @@ export default class Provider {
     this._store = store;
   }
 
-  static isOnline() {
-    return window.navigator.onLine;
-  }
-
   getFilms() {
     if (Provider.isOnline()) {
       return this._api.getFilms()
@@ -131,5 +127,9 @@ export default class Provider {
     }
 
     return Promise.reject(new Error(`Sync data failed`));
+  }
+
+  static isOnline() {
+    return window.navigator.onLine;
   }
 }

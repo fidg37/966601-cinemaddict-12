@@ -7,6 +7,10 @@ export default class PopupControl extends AbstractView {
     this._film = film;
   }
 
+  getTemplate() {
+    return this._createTemplate(this._film);
+  }
+
   _createTemplate(film) {
     const {watchlist, alreadyWatched, favorite} = film.userDetails;
 
@@ -20,9 +24,5 @@ export default class PopupControl extends AbstractView {
       <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${favorite ? `checked` : ``}>
       <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
     </section>`);
-  }
-
-  getTemplate() {
-    return this._createTemplate(this._film);
   }
 }

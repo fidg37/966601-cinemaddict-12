@@ -22,6 +22,27 @@ export default class Stats extends AbstractView {
     };
   }
 
+  getTemplate() {
+    return this._createTemplate();
+  }
+
+  renderChart() {
+    const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
+
+    const genres = getGenres(this._films);
+    const counts = getCountWatchedFilmsByGenre(this._films, genres);
+
+    statisticCtx.height = BAR_HEIGHT * genres.length;
+
+    renderColorsChart(statisticCtx, genres, counts);
+  }
+
+  setFilterClickHandler(callback) {
+    this._callback.filterClick = callback;
+
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`click`, this._handlers.filterClick);
+  }
+
   _createTemplate() {
     const totalTime = getTotalRuntime(this._films);
 
@@ -81,26 +102,4 @@ export default class Stats extends AbstractView {
       this._callback.filterClick(evt.target.value);
     }
   }
-
-  setFilterClickHandler(callback) {
-    this._callback.filterClick = callback;
-
-    this.getElement().querySelector(`.statistic__filters`).addEventListener(`click`, this._handlers.filterClick);
-  }
-
-  getTemplate() {
-    return this._createTemplate();
-  }
-
-  renderChart() {
-    const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
-
-    const genres = getGenres(this._films);
-    const counts = getCountWatchedFilmsByGenre(this._films, genres);
-
-    statisticCtx.height = BAR_HEIGHT * genres.length;
-
-    renderColorsChart(statisticCtx, genres, counts);
-  }
-
 }

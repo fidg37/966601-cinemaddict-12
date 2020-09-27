@@ -3,7 +3,7 @@ import {render} from "./utils/render.js";
 import {getRank} from "./utils/film.js";
 import UserRankView from "./view/user-rank.js";
 import FooterStatsView from "./view/footer-stats.js";
-import MovieList from "./presenter/movieList.js";
+import MovieList from "./presenter/movie-list.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 import FilterPresenter from "./presenter/filter.js";
